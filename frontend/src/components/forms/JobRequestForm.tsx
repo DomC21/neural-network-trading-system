@@ -5,13 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface JobRequest {
   location: string;
   complexity: string;
   preferred_date: string;
   description?: string;
+  customer_email: string;
 }
 
 export default function JobRequestForm() {
@@ -20,9 +22,11 @@ export default function JobRequestForm() {
     location: '',
     complexity: '',
     preferred_date: '',
-    description: ''
+    description: '',
+    customer_email: ''
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +38,15 @@ export default function JobRequestForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          request: {
+            location: formData.location,
+            complexity: formData.complexity,
+            preferred_date: new Date(formData.preferred_date).toISOString(),
+            description: formData.description
+          },
+          customer_email: formData.customer_email
+        }),
       });
 
       if (!response.ok) {
@@ -52,8 +64,11 @@ export default function JobRequestForm() {
         location: '',
         complexity: '',
         preferred_date: '',
-        description: ''
+        description: '',
+        customer_email: ''
       });
+      // Navigate to dashboard after successful submission
+      navigate('/dashboard');
     } catch (error) {
       toast({
         title: 'Error',
@@ -122,6 +137,18 @@ export default function JobRequestForm() {
               placeholder="Enter job description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="customer_email">Email</Label>
+            <Input
+              type="email"
+              id="customer_email"
+              placeholder="Enter your email"
+              value={formData.customer_email}
+              onChange={(e) => handleChange('customer_email', e.target.value)}
+              required
             />
           </div>
 

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
+from typing import List, Optional
+from pydantic import BaseModel, EmailStr
 
 from app.models import JobRequest, Job, JobStatus
 from app.services.job_service import JobService
@@ -26,8 +27,6 @@ chatbot_service = ChatbotService()
 @app.get("/healthz")
 async def healthz():
     return {"status": "ok"}
-
-from typing import Optional
 
 class JobSubmission(BaseModel):
     request: JobRequest
@@ -65,8 +64,6 @@ async def get_job(job_id: str):
         return job_service.get_job(job_id)
     except ValueError:
         raise HTTPException(status_code=404, detail="Job not found")
-
-from pydantic import BaseModel
 
 class ChatMessage(BaseModel):
     message: str

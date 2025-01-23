@@ -1,6 +1,6 @@
 from datetime import datetime
 import uuid
-from app.models import Job, JobRequest, Contractor, JobStatus
+from app.models import Job, JobRequest, Contractor, JobStatus, JobComplexity
 
 class JobService:
     def __init__(self):

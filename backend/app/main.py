@@ -27,10 +27,32 @@ chatbot_service = ChatbotService()
 async def healthz():
     return {"status": "ok"}
 
+from typing import Optional
+
+class JobSubmission(BaseModel):
+    request: JobRequest
+    customer_email: EmailStr
+
 @app.post("/jobs", response_model=Job)
-async def create_job(request: JobRequest):
-    job = job_service.create_job(request)
+async def create_job(submission: JobSubmission):
+    # Create and assign job
+    job = job_service.create_job(submission.request)
     job = job_service.assign_contractor(job.id)
+    
+    # Send notifications
+    await notification_service.send_job_confirmation(
+        email=submission.customer_email,
+        job=job
+    )
+    
+    if job.contractor_id:
+        contractor = job_service.contractors.get(job.contractor_id)
+        if contractor:
+            await notification_service.send_contractor_assignment(
+                contractor_email=f"{contractor.name.lower().replace(' ', '.')}@example.com",
+                job=job
+            )
+    
     return job
 
 @app.get("/jobs", response_model=List[Job])
@@ -44,7 +66,12 @@ async def get_job(job_id: str):
     except ValueError:
         raise HTTPException(status_code=404, detail="Job not found")
 
+from pydantic import BaseModel
+
+class ChatMessage(BaseModel):
+    message: str
+
 @app.post("/chat")
-async def chat(message: str):
-    response = chatbot_service.get_response(message)
+async def chat(chat_message: ChatMessage):
+    response = chatbot_service.get_response(chat_message.message)
     return {"response": response}

@@ -1,0 +1,1 @@
+# MSS AI Operational Efficiency Demo\n\nThis repository contains a demonstration of job assignment and customer communication modules for an MSS AI Operational Efficiency Software system.\n\n## Project Structure\n- `frontend/`: React-based web interface\n- `backend/`: FastAPI backend service

@@ -1,0 +1,398 @@
+[
+  {
+    "id": "prof-001",
+    "name": "Premium Consulting",
+    "description": "High-end business strategy consulting",
+    "category": "Profitable",
+    "costs": {
+      "fixed_costs": 5000,
+      "variable_costs": 15000
+    },
+    "metrics": {
+      "revenue": 50000,
+      "usage_count": 25,
+      "profit_margin": 45.5
+    },
+    "resources": {
+      "equipment_required": [
+        "Laptops",
+        "Conference Room"
+      ],
+      "contractor_count": 3
+    },
+    "performance": {
+      "monthly_profits": [
+        31547.05175303666,
+        30394.166474791302,
+        26005.892319621555,
+        29472.091879256426,
+        25354.612108185924,
+        34673.18865486074,
+        31300.166301936984,
+        35421.96355531726,
+        34829.483199719776,
+        33462.973769010634,
+        31745.46541835916,
+        25154.458931743844
+      ],
+      "seasonal_trends": {
+        "winter": 1.1434136153757213,
+        "spring": 0.9665938655233847,
+        "summer": 1.143992403011625,
+        "fall": 0.9170568585487338
+      }
+    }
+  },
+  {
+    "id": "prof-002",
+    "name": "Enterprise Solutions",
+    "description": "Custom enterprise software development",
+    "category": "Profitable",
+    "costs": {
+      "fixed_costs": 8000,
+      "variable_costs": 25000
+    },
+    "metrics": {
+      "revenue": 75000,
+      "usage_count": 15,
+      "profit_margin": 42.0
+    },
+    "resources": {
+      "equipment_required": [
+        "Development Servers",
+        "Testing Environment"
+      ],
+      "contractor_count": 5
+    },
+    "performance": {
+      "monthly_profits": [
+        49389.06106304875,
+        47207.230444398665,
+        39649.68848345097,
+        37646.297615657044,
+        48587.27710508257,
+        42205.94958345111,
+        38728.834784528124,
+        48776.5483680246,
+        34220.952221775566,
+        33846.62196169596,
+        42483.653332737755,
+        45671.81494227374
+      ],
+      "seasonal_trends": {
+        "winter": 0.8528713592515074,
+        "spring": 1.182945448065255,
+        "summer": 1.0276027761563975,
+        "fall": 1.090865047717226
+      }
+    }
+  },
+  {
+    "id": "prof-003",
+    "name": "Data Analytics Suite",
+    "description": "Advanced data analytics and visualization",
+    "category": "Profitable",
+    "costs": {
+      "fixed_costs": 6000,
+      "variable_costs": 18000
+    },
+    "metrics": {
+      "revenue": 55000,
+      "usage_count": 30,
+      "profit_margin": 41.2
+    },
+    "resources": {
+      "equipment_required": [
+        "GPU Servers",
+        "Data Storage"
+      ],
+      "contractor_count": 4
+    },
+    "performance": {
+      "monthly_profits": [
+        27137.723878602945,
+        37089.964873584475,
+        24851.53163236225,
+        35924.465590134336,
+        32139.823187456866,
+        34975.27691359559,
+        33045.38754397905,
+        26402.210563436434,
+        35248.84931776004,
+        36345.7165285383,
+        36583.31672299188,
+        35265.386617148644
+      ],
+      "seasonal_trends": {
+        "winter": 0.989097925727222,
+        "spring": 0.8978480913329039,
+        "summer": 0.8780039760085409,
+        "fall": 0.9711360726579996
+      }
+    }
+  },
+  {
+    "id": "opt-001",
+    "name": "Cloud Migration",
+    "description": "Cloud infrastructure migration service",
+    "category": "Optimization",
+    "costs": {
+      "fixed_costs": 4000,
+      "variable_costs": 16000
+    },
+    "metrics": {
+      "revenue": 30000,
+      "usage_count": 20,
+      "profit_margin": 35.0
+    },
+    "resources": {
+      "equipment_required": [
+        "Cloud Tools",
+        "Migration Software"
+      ],
+      "contractor_count": 3
+    },
+    "performance": {
+      "monthly_profits": [
+        16380.57374819117,
+        15290.591071823557,
+        13019.45856107818,
+        14493.781058650238,
+        13649.624910465802,
+        17794.95446292349,
+        15249.336664060029,
+        16989.621841202952,
+        13518.408188367614,
+        12145.892374266417,
+        14338.562106354506,
+        17654.322331305702
+      ],
+      "seasonal_trends": {
+        "winter": 1.171676700558282,
+        "spring": 1.1934078805052861,
+        "summer": 1.106851980109953,
+        "fall": 1.1000860671620087
+      }
+    }
+  },
+  {
+    "id": "opt-002",
+    "name": "Security Audit",
+    "description": "Cybersecurity assessment and audit",
+    "category": "Optimization",
+    "costs": {
+      "fixed_costs": 8000,
+      "variable_costs": 13000
+    },
+    "metrics": {
+      "revenue": 35000,
+      "usage_count": 15,
+      "profit_margin": 35.0
+    },
+    "resources": {
+      "equipment_required": [
+        "Security Tools",
+        "Testing Environment"
+      ],
+      "contractor_count": 2
+    },
+    "performance": {
+      "monthly_profits": [
+        8057.739575677066,
+        10622.85155218165,
+        11760.136138646225,
+        10874.613749367503,
+        9814.163478228955,
+        9776.81686204972,
+        10013.978891968145,
+        11895.839524768659,
+        11462.046980181598,
+        10919.507453218184,
+        9775.868093606945,
+        11009.619334576291
+      ],
+      "seasonal_trends": {
+        "winter": 0.8812544265490224,
+        "spring": 1.0231903488985719,
+        "summer": 1.0921717725668474,
+        "fall": 0.9880955291883831
+      }
+    }
+  },
+  {
+    "id": "opt-003",
+    "name": "Mobile App Development",
+    "description": "Custom mobile application development",
+    "category": "Optimization",
+    "costs": {
+      "fixed_costs": 8000,
+      "variable_costs": 15000
+    },
+    "metrics": {
+      "revenue": 35000,
+      "usage_count": 10,
+      "profit_margin": 35.5
+    },
+    "resources": {
+      "equipment_required": [
+        "Mobile Devices",
+        "Testing Tools"
+      ],
+      "contractor_count": 4
+    },
+    "performance": {
+      "monthly_profits": [
+        21120.193258115476,
+        16296.064645264129,
+        22492.012701873144,
+        19714.740680847863,
+        22021.687140040038,
+        21419.57981076521,
+        23515.373753887357,
+        21665.857434619815,
+        23167.519470484804,
+        16763.373492930117,
+        20988.578369797804,
+        21282.814817657912
+      ],
+      "seasonal_trends": {
+        "winter": 1.1484831661963448,
+        "spring": 1.0673314528476092,
+        "summer": 0.9809499121071404,
+        "fall": 1.1054890355940674
+      }
+    }
+  },
+  {
+    "id": "unp-001",
+    "name": "Legacy System Support",
+    "description": "Maintenance of legacy systems",
+    "category": "Unprofitable",
+    "costs": {
+      "fixed_costs": 6000,
+      "variable_costs": 14000
+    },
+    "metrics": {
+      "revenue": 22000,
+      "usage_count": 8,
+      "profit_margin": 10.2
+    },
+    "resources": {
+      "equipment_required": [
+        "Legacy Hardware",
+        "Old Software Licenses"
+      ],
+      "contractor_count": 2
+    },
+    "performance": {
+      "monthly_profits": [
+        1615.9321622890886,
+        2371.303977920106,
+        1890.3048659558774,
+        2388.783104618539,
+        1760.9022972610687,
+        2271.598076849301,
+        1980.6840004001062,
+        1685.5968157397435,
+        1692.8025759720267,
+        1924.7407270805397,
+        2373.211567820398,
+        2099.199100850896
+      ],
+      "seasonal_trends": {
+        "winter": 1.0706717173441485,
+        "spring": 0.9368950710715962,
+        "summer": 1.169439959469835,
+        "fall": 1.1606029633410633
+      }
+    }
+  },
+  {
+    "id": "unp-002",
+    "name": "Basic Web Hosting",
+    "description": "Simple website hosting service",
+    "category": "Unprofitable",
+    "costs": {
+      "fixed_costs": 2000,
+      "variable_costs": 8000
+    },
+    "metrics": {
+      "revenue": 12000,
+      "usage_count": 50,
+      "profit_margin": 15.4
+    },
+    "resources": {
+      "equipment_required": [
+        "Web Servers",
+        "Control Panel"
+      ],
+      "contractor_count": 1
+    },
+    "performance": {
+      "monthly_profits": [
+        2040.3421548805202,
+        2140.1662088939934,
+        2139.8448889938722,
+        1628.559015457114,
+        1911.8571294780486,
+        2164.66292244904,
+        1624.4934677354624,
+        1913.1845800764784,
+        2329.094331519437,
+        2383.0762587079266,
+        1694.4909556492216,
+        2112.9250690049835
+      ],
+      "seasonal_trends": {
+        "winter": 1.1989959884554973,
+        "spring": 1.0297604753749383,
+        "summer": 0.8811486717889664,
+        "fall": 0.8141858240134738
+      }
+    }
+  },
+  {
+    "id": "unp-003",
+    "name": "Email Support",
+    "description": "Basic email technical support",
+    "category": "Unprofitable",
+    "costs": {
+      "fixed_costs": 3000,
+      "variable_costs": 10000
+    },
+    "metrics": {
+      "revenue": 15000,
+      "usage_count": 100,
+      "profit_margin": 13.3
+    },
+    "resources": {
+      "equipment_required": [
+        "Help Desk Software",
+        "Phone System"
+      ],
+      "contractor_count": 3
+    },
+    "performance": {
+      "monthly_profits": [
+        2098.8605754964087,
+        1738.1950180349727,
+        1914.9063135098022,
+        2052.535082327271,
+        2226.249551457136,
+        2091.5271641135732,
+        1681.9290953221516,
+        2048.1927052625315,
+        1834.3546713058065,
+        2089.996211464554,
+        1934.101036325846,
+        1752.3463204667844
+      ],
+      "seasonal_trends": {
+        "winter": 0.8717279260862387,
+        "spring": 1.024400805327987,
+        "summer": 1.090903698786726,
+        "fall": 0.9505168547908658
+      }
+    }
+  }
+]

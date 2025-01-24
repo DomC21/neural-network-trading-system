@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, TrendingUp, TrendingDown, AlertCircle, DollarSign, Users, Package } from 'lucide-react';
 import { ServiceResponse, FilterThresholds, SimulationParams } from './types';
+import { analyzeService } from './api';
 
 // Core MSS services with fixed categories
 const getCoreServices = (): ServiceResponse[] => {
@@ -92,8 +93,9 @@ const getCoreServices = (): ServiceResponse[] => {
 };
 
 function App() {
-  const [services] = React.useState<ServiceResponse[]>(() => getCoreServices());
+  const [services, setServices] = React.useState<ServiceResponse[]>(() => getCoreServices());
   const [selectedService, setSelectedService] = React.useState<ServiceResponse | null>(null);
+  const [aiAnalysis, setAiAnalysis] = React.useState<any>(null);
   const [simulationParams, setSimulationParams] = React.useState<SimulationParams>({
     newFixedCosts: 0,
     newVariableCosts: 0,
@@ -105,6 +107,20 @@ function App() {
     optimizationMin: 20,
     unprofitableMax: 20
   });
+
+  // Update service categories when thresholds change
+  React.useEffect(() => {
+    // Force re-render of service cards when thresholds change
+    const updatedServices = services.map(service => ({
+      ...service,
+      category: service.metrics.profit_margin >= filterThresholds.profitableMin
+        ? 'Profitable'
+        : service.metrics.profit_margin >= filterThresholds.optimizationMin
+        ? 'Optimization'
+        : 'Unprofitable'
+    }));
+    setServices(updatedServices);
+  }, [filterThresholds]);
 
   // Calculate overview statistics
   const stats = React.useMemo(() => {
@@ -484,90 +500,103 @@ function App() {
                       <div className="bg-white rounded-lg p-4 border border-gray-200">
                         <div className="flex items-center justify-between mb-4">
                           <h4 className="text-sm font-semibold text-[#2B2B2B]">AI Insights & Recommendations</h4>
-                          <div className={`px-2 py-1 rounded text-xs font-medium ${
-                            service.metrics.profit_margin > 40 ? 'bg-green-100 text-green-800' :
-                            service.metrics.profit_margin > 20 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
-                            {service.metrics.profit_margin > 40 ? 'Growth Potential' :
-                             service.metrics.profit_margin > 20 ? 'Optimization Required' :
-                             'Action Needed'}
-                          </div>
+                          {selectedService?.id === service.id && aiAnalysis ? (
+                            <div className={`px-2 py-1 rounded text-xs font-medium ${
+                              aiAnalysis.category === 'Profitable' ? 'bg-green-100 text-green-800' :
+                              aiAnalysis.category === 'Optimization' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {aiAnalysis.market_insights.market_position} Position
+                            </div>
+                          ) : (
+                            <div className="text-xs text-gray-500">Select to analyze</div>
+                          )}
                         </div>
                         
                         <div className="space-y-3">
-                          {/* Performance Analysis */}
-                          <div className="flex items-start space-x-3">
-                            <div className="bg-gray-50 p-2 rounded">
-                              <TrendingUp className="w-4 h-4 text-[#45B6B0]" />
-                            </div>
-                            <div>
-                              <h5 className="text-sm font-medium text-gray-900">Performance Analysis</h5>
-                              <p className="text-sm text-gray-600">
-                                {service.metrics.profit_margin > 40
-                                  ? `Strong performance with ${service.metrics.profit_margin.toFixed(1)}% margin. Consider scaling operations.`
-                                  : service.metrics.profit_margin > 20
-                                  ? `Moderate performance at ${service.metrics.profit_margin.toFixed(1)}% margin. Optimization opportunities exist.`
-                                  : `Below target performance at ${service.metrics.profit_margin.toFixed(1)}% margin. Immediate attention required.`
-                                }
-                              </p>
-                            </div>
-                          </div>
+                          {selectedService?.id === service.id && aiAnalysis ? (
+                            <>
+                              {/* Performance Analysis */}
+                              <div className="flex items-start space-x-3">
+                                <div className="bg-gray-50 p-2 rounded">
+                                  <TrendingUp className="w-4 h-4 text-[#45B6B0]" />
+                                </div>
+                                <div>
+                                  <h5 className="text-sm font-medium text-gray-900">Performance Analysis</h5>
+                                  <p className="text-sm text-gray-600">
+                                    Confidence Score: {(aiAnalysis.confidence_score * 100).toFixed(1)}%
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    Profit Trend: {aiAnalysis.market_insights.profit_trend}
+                                  </p>
+                                </div>
+                              </div>
 
-                          {/* Market Position */}
-                          <div className="flex items-start space-x-3">
-                            <div className="bg-gray-50 p-2 rounded">
-                              <BarChart className="w-4 h-4 text-[#45B6B0]" />
-                            </div>
-                            <div>
-                              <h5 className="text-sm font-medium text-gray-900">Market Position</h5>
-                              <p className="text-sm text-gray-600">
-                                Revenue per use: ${(service.metrics.revenue / service.metrics.usage_count).toFixed(0)}
-                                {service.metrics.revenue / service.metrics.usage_count > 1000
-                                  ? " (Premium positioning)"
-                                  : service.metrics.revenue / service.metrics.usage_count > 500
-                                  ? " (Standard positioning)"
-                                  : " (Economy positioning)"
-                                }
-                              </p>
-                            </div>
-                          </div>
+                              {/* Market Position */}
+                              <div className="flex items-start space-x-3">
+                                <div className="bg-gray-50 p-2 rounded">
+                                  <BarChart className="w-4 h-4 text-[#45B6B0]" />
+                                </div>
+                                <div>
+                                  <h5 className="text-sm font-medium text-gray-900">Market Position</h5>
+                                  <p className="text-sm text-gray-600">
+                                    Revenue per use: ${aiAnalysis.market_insights.revenue_per_use.toFixed(0)}
+                                  </p>
+                                  {aiAnalysis.market_insights.scaling_recommended && (
+                                    <p className="text-sm text-green-600 mt-1">
+                                      ✓ Recommended for scaling
+                                    </p>
+                                  )}
+                                  {aiAnalysis.market_insights.discontinuation_recommended && (
+                                    <p className="text-sm text-red-600 mt-1">
+                                      ⚠ Consider discontinuation
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
 
-                          {/* Key Recommendations */}
-                          <div className="flex items-start space-x-3">
-                            <div className="bg-gray-50 p-2 rounded">
-                              <AlertCircle className="w-4 h-4 text-[#45B6B0]" />
+                              {/* Key Recommendations */}
+                              <div className="flex items-start space-x-3">
+                                <div className="bg-gray-50 p-2 rounded">
+                                  <AlertCircle className="w-4 h-4 text-[#45B6B0]" />
+                                </div>
+                                <div>
+                                  <h5 className="text-sm font-medium text-gray-900">Key Recommendations</h5>
+                                  <ul className="mt-1 space-y-1">
+                                    {aiAnalysis.optimization_suggestions.map((suggestion: string, index: number) => (
+                                      <li key={index} className="text-sm text-gray-600">
+                                        {suggestion}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-center py-6 text-gray-500">
+                              <AlertCircle className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                              <p>Select "Analyze Service" to view AI recommendations</p>
                             </div>
-                            <div>
-                              <h5 className="text-sm font-medium text-gray-900">Key Recommendations</h5>
-                              <ul className="mt-1 space-y-1">
-                                {service.metrics.profit_margin > 40 ? (
-                                  <>
-                                    <li className="text-sm text-gray-600">• Increase marketing investment</li>
-                                    <li className="text-sm text-gray-600">• Explore market expansion</li>
-                                    <li className="text-sm text-gray-600">• Consider premium pricing strategy</li>
-                                  </>
-                                ) : service.metrics.profit_margin > 20 ? (
-                                  <>
-                                    <li className="text-sm text-gray-600">• Optimize operational efficiency</li>
-                                    <li className="text-sm text-gray-600">• Review pricing structure</li>
-                                    <li className="text-sm text-gray-600">• Enhance service delivery</li>
-                                  </>
-                                ) : (
-                                  <>
-                                    <li className="text-sm text-gray-600">• Conduct comprehensive review</li>
-                                    <li className="text-sm text-gray-600">• Evaluate resource allocation</li>
-                                    <li className="text-sm text-gray-600">• Consider service restructuring</li>
-                                  </>
-                                )}
-                              </ul>
-                            </div>
-                          </div>
+                          )}
                         </div>
                       </div>
 
                       <button
-                        onClick={() => setSelectedService(selectedService?.id === service.id ? null : service)}
+                        onClick={async () => {
+                          const newSelected = selectedService?.id === service.id ? null : service;
+                          setSelectedService(newSelected);
+                          if (newSelected) {
+                            try {
+                              const analysis = await analyzeService(newSelected);
+                              setAiAnalysis(analysis);
+                            } catch (err) {
+                              console.error('Failed to analyze service:', err);
+                              setAiAnalysis(null);
+                            }
+                          } else {
+                            setAiAnalysis(null);
+                          }
+                        }}
                         className="w-full py-2 bg-[#45B6B0] text-white rounded-md hover:bg-[#3a9a95] transition-colors flex items-center justify-center space-x-2"
                       >
                         {selectedService?.id === service.id ? (
@@ -577,7 +606,7 @@ function App() {
                         ) : (
                           <>
                             <BarChart className="w-4 h-4" />
-                            <span>Simulate Changes</span>
+                            <span>Analyze Service</span>
                           </>
                         )}
                       </button>
@@ -767,23 +796,21 @@ function App() {
                   <div className="space-y-2">
                     <h4 className="font-semibold text-sm">Optimization Suggestions:</h4>
                     <ul className="space-y-2">
-                      {selectedService.metrics.profit_margin < filterThresholds.profitableMin && (
-                        <li className="text-sm flex items-center text-yellow-700">
-                          <AlertCircle className="w-4 h-4 mr-2" />
-                          Consider price adjustments to improve margin
-                        </li>
-                      )}
-                      {selectedService.metrics.profit_margin > filterThresholds.profitableMin && (
-                        <li className="text-sm flex items-center text-green-700">
-                          <TrendingUp className="w-4 h-4 mr-2" />
-                          Strong performance - consider scaling operations
-                        </li>
-                      )}
-                      {selectedService.metrics.profit_margin < filterThresholds.optimizationMin && (
-                        <li className="text-sm flex items-center text-red-700">
-                          <TrendingDown className="w-4 h-4 mr-2" />
-                          Review cost structure and pricing strategy
-                        </li>
+                      {aiAnalysis ? (
+                        aiAnalysis.optimization_suggestions.map((suggestion: string, index: number) => (
+                          <li key={index} className="text-sm flex items-center text-gray-700">
+                            {suggestion.includes('Consider discontinuation') ? (
+                              <TrendingDown className="w-4 h-4 mr-2 text-red-600" />
+                            ) : suggestion.includes('Recommended for scaling') ? (
+                              <TrendingUp className="w-4 h-4 mr-2 text-green-600" />
+                            ) : (
+                              <AlertCircle className="w-4 h-4 mr-2 text-yellow-600" />
+                            )}
+                            {suggestion}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="text-sm text-gray-500">Loading recommendations...</li>
                       )}
                     </ul>
                   </div>

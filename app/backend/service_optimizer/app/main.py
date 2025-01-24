@@ -30,40 +30,50 @@ async def startup_event():
 async def healthz():
     return {"status": "ok"}
 
+@app.get("/")
+async def root():
+    return {"message": "Service Optimization API"}
+
 @app.post("/api/services/analyze")
 async def analyze_service(service: Service) -> ServiceClassification:
     """Analyze a service and return classification results"""
-    category, confidence, should_discontinue, should_scale = ml_engine.classify_service(service.dict())
-    suggestions = ml_engine.generate_optimization_suggestions(service.dict())
-    
-    # Get detailed reasons for recommendations
-    _, discontinue_reason = ml_engine.check_discontinuation_criteria(service.dict())
-    _, scale_reason = ml_engine.check_scaling_criteria(service.dict())
-    
-    # Add recommendations to suggestions if applicable
-    if should_discontinue:
-        suggestions.insert(0, f"⚠ Consider discontinuation: {discontinue_reason}")
-    if should_scale:
-        suggestions.insert(0, f"✓ Recommended for scaling: {scale_reason}")
-    
-    # Enhanced market insights
-    market_insights = {
-        "market_position": "Premium" if category == "Profitable" else 
-                         "Standard" if category == "Optimization" else "Basic",
-        "scaling_recommended": should_scale,
-        "discontinuation_recommended": should_discontinue,
-        "revenue_per_use": service.metrics.revenue / service.metrics.usage_count,
-        "profit_trend": "Growing" if service.performance.monthly_profits[-1] > service.performance.monthly_profits[0]
-                       else "Declining"
-    }
-    
-    return ServiceClassification(
-        service_id=service.id,
-        category=category,
-        confidence_score=confidence,
-        optimization_suggestions=suggestions,
-        market_insights=market_insights
-    )
+    try:
+        print("Received service data:", service.dict())
+        service_data = service.dict()
+        category, confidence, should_discontinue, should_scale = ml_engine.classify_service(service_data)
+        suggestions = ml_engine.generate_optimization_suggestions(service_data)
+        
+        # Get detailed reasons for recommendations
+        _, discontinue_reason = ml_engine.check_discontinuation_criteria(service.dict())
+        _, scale_reason = ml_engine.check_scaling_criteria(service.dict())
+        
+        # Add recommendations to suggestions if applicable
+        if should_discontinue:
+            suggestions.insert(0, f"⚠ Consider discontinuation: {discontinue_reason}")
+        if should_scale:
+            suggestions.insert(0, f"✓ Recommended for scaling: {scale_reason}")
+        
+        # Enhanced market insights
+        market_insights = {
+            "market_position": "Premium" if category == "Profitable" else 
+                             "Standard" if category == "Optimization" else "Basic",
+            "scaling_recommended": should_scale,
+            "discontinuation_recommended": should_discontinue,
+            "revenue_per_use": service.metrics.revenue / service.metrics.usage_count,
+            "profit_trend": "Growing" if service.performance.monthly_profits[-1] > service.performance.monthly_profits[0]
+                           else "Declining"
+        }
+        
+        return ServiceClassification(
+            service_id=service.id,
+            category=category,
+            confidence_score=confidence,
+            optimization_suggestions=suggestions,
+            market_insights=market_insights
+        )
+    except Exception as e:
+        print(f"Error analyzing service: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/services")
 async def get_services(db: Session = Depends(get_db)) -> List[Service]:

@@ -207,7 +207,7 @@ function App() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             <a href="/" className="flex items-center">
-              <img src="/mss_logo.png" alt="MSS Logo" className="h-12" />
+              <img src="/MSSLogoColorRetina.png" alt="MSS Logo" className="h-12" />
             </a>
             <div className="hidden md:flex space-x-8">
               <a href="#" className="text-[#2B2B2B] hover:text-[#45B6B0] font-medium transition-colors">Relocation Support</a>

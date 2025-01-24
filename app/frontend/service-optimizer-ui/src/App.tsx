@@ -496,6 +496,63 @@ function App() {
                         </div>
                       )}
 
+                      {/* Analyze Service Button */}
+                      <button
+                        onClick={async () => {
+                          const newSelected = selectedService?.id === service.id ? null : service;
+                          setSelectedService(newSelected);
+                          if (newSelected) {
+                            try {
+                              // Format service data to match backend expectations
+                              const serviceData = {
+                                id: newSelected.id,
+                                name: newSelected.name,
+                                description: newSelected.description,
+                                category: newSelected.category,
+                                costs: {
+                                  fixed_costs: 5000, // Example fixed costs
+                                  variable_costs: 15000 // Example variable costs
+                                },
+                                metrics: {
+                                  revenue: newSelected.metrics.revenue,
+                                  usage_count: newSelected.metrics.usage_count,
+                                  profit_margin: newSelected.metrics.profit_margin
+                                },
+                                resources: {
+                                  equipment_required: ["Custom Crating Materials", "Art Handling Equipment"],
+                                  contractor_count: 3
+                                },
+                                performance: {
+                                  monthly_profits: newSelected.performance.monthly_profits,
+                                  seasonal_trends: newSelected.performance.seasonal_trends
+                                }
+                              };
+                              console.log('Sending service data:', serviceData);
+                              const analysis = await analyzeService(serviceData);
+                              console.log('Received analysis:', analysis);
+                              setAiAnalysis(analysis);
+                            } catch (err) {
+                              console.error('Failed to analyze service:', err);
+                              setAiAnalysis(null);
+                            }
+                          } else {
+                            setAiAnalysis(null);
+                          }
+                        }}
+                        className="w-full py-2 bg-[#45B6B0] text-white rounded-md hover:bg-[#3a9a95] transition-colors flex items-center justify-center space-x-2"
+                      >
+                        {selectedService?.id === service.id ? (
+                          <>
+                            <span>Close Analysis</span>
+                          </>
+                        ) : (
+                          <>
+                            <BarChart className="w-4 h-4" />
+                            <span>Analyze Service</span>
+                          </>
+                        )}
+                      </button>
+
                       {/* AI Recommendations */}
                       <div className="bg-white rounded-lg p-4 border border-gray-200">
                         <div className="flex items-center justify-between mb-4">

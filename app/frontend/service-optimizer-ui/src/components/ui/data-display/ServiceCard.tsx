@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, BarChart } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart, HelpCircle } from 'lucide-react';
 import { ServiceMetricsChart } from './ServiceMetricsChart';
+import { ServiceSimulator } from './ServiceSimulator';
 import { Tooltip } from '@radix-ui/react-tooltip';
 
 interface ServiceCardProps {
@@ -58,33 +59,45 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{service.name}</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{service.description}</p>
           </div>
-          <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getCategoryColor(service.category)}`}>
-            {service.category}
-          </span>
+          <Tooltip content={
+            service.category === 'Profitable' ? 'Services with profit margins above 40%, ideal for scaling' :
+            service.category === 'Optimization' ? 'Services with margins between 20-40%, requiring optimization' :
+            'Services with margins below 20%, consider restructuring'
+          }>
+            <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getCategoryColor(service.category)}`}>
+              {service.category}
+            </span>
+          </Tooltip>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          <Tooltip content="Monthly revenue from this service">
+          <Tooltip content="Total monthly revenue generated from this service, including all fees and charges">
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Revenue</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                Revenue
+                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 ${service.metrics.revenue.toLocaleString()}
               </p>
             </div>
           </Tooltip>
 
-          <Tooltip content="Profit margin percentage">
+          <Tooltip content="Percentage of revenue that becomes profit after deducting all costs (fixed and variable)">
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Margin</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                Margin
+                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 {service.metrics.profit_margin.toFixed(1)}%
               </p>
             </div>
           </Tooltip>
 
-          <Tooltip content="Number of times this service was used">
+          <Tooltip content="Total number of service utilizations in the last month, indicating demand and adoption">
             <div className="col-span-2 sm:col-span-1 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Usage</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                Usage
+                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 {service.metrics.usage_count}
               </p>
@@ -93,24 +106,37 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
         </div>
 
         {isSelected && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <ServiceMetricsChart data={chartData} height={200} />
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <ServiceMetricsChart data={chartData} height={200} />
+            </motion.div>
+            <ServiceSimulator
+              initialRevenue={service.metrics.revenue}
+              initialUsage={service.metrics.usage_count}
+              initialMargin={service.metrics.profit_margin}
+              onSimulate={(params) => {
+                console.log('Simulation params:', params);
+                // TODO: Implement simulation logic
+              }}
+            />
+          </>
         )}
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onAnalyze}
-          className="w-full py-2 px-4 bg-[#45B6B0] hover:bg-[#3a9a95] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
-        >
-          <BarChart className="w-4 h-4" />
-          <span>{isSelected ? 'Hide Details' : 'Analyze Service'}</span>
-        </motion.button>
+        <Tooltip content={isSelected ? 'Hide detailed analysis and metrics' : 'View AI-powered analysis and detailed performance metrics'}>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onAnalyze}
+            className="w-full py-2 px-4 bg-[#45B6B0] hover:bg-[#3a9a95] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <BarChart className="w-4 h-4" />
+            <span>{isSelected ? 'Hide Details' : 'Analyze Service'}</span>
+          </motion.button>
+        </Tooltip>
       </div>
     </motion.div>
   );

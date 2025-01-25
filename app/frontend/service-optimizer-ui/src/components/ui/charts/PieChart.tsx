@@ -1,5 +1,6 @@
-import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, TooltipProps } from 'recharts';
 import { motion } from 'framer-motion';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface PieChartProps {
   data: Array<{
@@ -8,7 +9,7 @@ interface PieChartProps {
     color: string;
   }>;
   height?: number;
-  tooltipFormatter?: (value: any) => string;
+  tooltipFormatter?: TooltipProps<ValueType, NameType>['formatter'];
 }
 
 export function PieChart({

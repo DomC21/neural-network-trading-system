@@ -1,8 +1,9 @@
-import { ResponsiveContainer, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, TooltipProps } from 'recharts';
 import { motion } from 'framer-motion';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface LineChartProps {
-  data: any[];
+  data: Array<Record<string, any>>;
   height?: number;
   lines: Array<{
     key: string;
@@ -10,7 +11,7 @@ interface LineChartProps {
     name: string;
   }>;
   xAxisKey: string;
-  tooltipFormatter?: (value: any) => string;
+  tooltipFormatter?: TooltipProps<ValueType, NameType>['formatter'];
   yAxisFormatter?: (value: any) => string;
 }
 

@@ -35,11 +35,16 @@ export function ServiceSimulator({ initialRevenue, initialUsage, initialMargin, 
     >
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Service Simulation</h3>
-        <Tooltip content="Adjust metrics to see potential impact on service performance">
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <div className="p-2 text-sm">
+              Adjust metrics to see potential impact on service performance
+            </div>
+          </Tooltip>
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Drag sliders to simulate changes
           </span>
-        </Tooltip>
+        </div>
       </div>
 
       <div className="space-y-4">

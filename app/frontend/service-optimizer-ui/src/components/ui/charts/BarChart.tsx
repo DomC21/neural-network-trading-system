@@ -1,8 +1,9 @@
-import { ResponsiveContainer, BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, TooltipProps } from 'recharts';
 import { motion } from 'framer-motion';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface BarChartProps {
-  data: any[];
+  data: Array<Record<string, any>>;
   height?: number;
   bars: Array<{
     key: string;
@@ -11,7 +12,7 @@ interface BarChartProps {
     stackId?: string;
   }>;
   xAxisKey: string;
-  tooltipFormatter?: (value: any) => string;
+  tooltipFormatter?: TooltipProps<ValueType, NameType>['formatter'];
   yAxisFormatter?: (value: any) => string;
 }
 

@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, BarChart, HelpCircle } from 'lucide-react';
+import { Icons } from '../icons';
 import { ServiceMetricsChart } from './ServiceMetricsChart';
 import { ServiceSimulator } from './ServiceSimulator';
-import { Tooltip } from '@radix-ui/react-tooltip';
+import { Tooltip } from '../tooltip';
 
 interface ServiceCardProps {
   service: {
@@ -75,7 +75,7 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
               <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                 Revenue
-                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
+                <Icons.HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 ${service.metrics.revenue.toLocaleString()}
               </p>
@@ -86,7 +86,7 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
               <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                 Margin
-                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
+                <Icons.HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 {service.metrics.profit_margin.toFixed(1)}%
               </p>
@@ -97,7 +97,7 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
             <div className="col-span-2 sm:col-span-1 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600">
               <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                 Usage
-                <HelpCircle className="w-4 h-4 text-gray-400" /></p>
+                <Icons.HelpCircle className="w-4 h-4 text-gray-400" /></p>
               <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                 {service.metrics.usage_count}
               </p>
@@ -133,7 +133,7 @@ export function ServiceCard({ service, onAnalyze, isSelected }: ServiceCardProps
             onClick={onAnalyze}
             className="w-full py-2 px-4 bg-[#45B6B0] hover:bg-[#3a9a95] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
           >
-            <BarChart className="w-4 h-4" />
+            <Icons.BarChart className="w-4 h-4" />
             <span>{isSelected ? 'Hide Details' : 'Analyze Service'}</span>
           </motion.button>
         </Tooltip>

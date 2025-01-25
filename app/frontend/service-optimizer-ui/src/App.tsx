@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ThemeProvider } from './components/ui/theme/ThemeProvider';
 import { Container, Grid, Section } from './components/ui/layout';
 import { PageLayout } from './components/ui/layout/PageLayout';
@@ -10,7 +10,8 @@ import { PieChart } from './components/ui/charts';
 import { ChatBox } from './components/chat/ChatBox';
 import { AIRecommendations } from './components/ui/data-display/AIRecommendations';
 import { ServiceSimulator } from './components/ui/data-display/ServiceSimulator';
-import { TrendingUp, TrendingDown, Users, DollarSign, Search } from 'lucide-react';
+import { Icons } from './components/ui/icons';
+// Import removed
 import { fetchServices, analyzeService } from './api';
 import type { Service, ServiceClassification } from './types';
 import { Button } from './components/ui/base';
@@ -19,7 +20,7 @@ function App() {
   const [services, setServices] = useState<Service[]>([]);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState<ServiceClassification | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -93,7 +94,7 @@ function App() {
                     <MetricCard
                       title="Total Revenue"
                       value={`$${totalRevenue.toLocaleString()}`}
-                      icon={<DollarSign className="w-5 h-5 text-green-600" />}
+                      icon={<Icons.DollarSign className="w-5 h-5 text-green-600" />}
                       trend={{ value: 12.5, isPositive: true }}
                       tooltipContent="Total revenue across all services"
                     />
@@ -106,7 +107,7 @@ function App() {
                     <MetricCard
                       title="Average Margin"
                       value={`${averageMargin.toFixed(1)}%`}
-                      icon={<TrendingUp className="w-5 h-5 text-blue-600" />}
+                      icon={<Icons.TrendingUp className="w-5 h-5 text-blue-600" />}
                       trend={{ value: 2.3, isPositive: true }}
                       tooltipContent="Average profit margin across all services"
                     />
@@ -119,7 +120,7 @@ function App() {
                     <MetricCard
                       title="Total Usage"
                       value={totalUsage.toLocaleString()}
-                      icon={<Users className="w-5 h-5 text-purple-600" />}
+                      icon={<Icons.Users className="w-5 h-5 text-purple-600" />}
                       trend={{ value: 8.7, isPositive: true }}
                       tooltipContent="Total number of service usages"
                     />
@@ -132,7 +133,7 @@ function App() {
                     <MetricCard
                       title="Services Needing Optimization"
                       value={profitabilityData[1].value}
-                      icon={<TrendingDown className="w-5 h-5 text-yellow-600" />}
+                      icon={<Icons.TrendingDown className="w-5 h-5 text-yellow-600" />}
                       tooltipContent="Number of services requiring optimization"
                     />
                   </motion.div>
@@ -151,7 +152,7 @@ function App() {
                       <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-semibold">Service Performance</h2>
                         <Button variant="outline" size="sm">
-                          <Search className="w-4 h-4 mr-2" />
+                          <Icons.Search className="w-4 h-4 mr-2" />
                           Filter Services
                         </Button>
                       </div>
@@ -209,6 +210,7 @@ function App() {
                   </div>
                 </Grid>
               </Section>
+            </Container>
           </main>
         </div>
         <ChatBox />

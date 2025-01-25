@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart, Settings, HelpCircle, FileText, ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { Tooltip } from '@radix-ui/react-tooltip';
+import type { LucideIcon } from 'lucide-react';
+import { Icons } from '../icons';
+import { Tooltip } from '../tooltip';
 import { Input } from '../input';
 
 interface NavItem {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   label: string;
   href: string;
 }
 
 const navItems: NavItem[] = [
-  { icon: <BarChart className="w-5 h-5" />, label: 'Dashboard', href: '/' },
-  { icon: <FileText className="w-5 h-5" />, label: 'Reports', href: '/reports' },
-  { icon: <Settings className="w-5 h-5" />, label: 'Settings', href: '/settings' },
-  { icon: <HelpCircle className="w-5 h-5" />, label: 'Help', href: '/help' },
+  { icon: Icons.BarChart, label: 'Dashboard', href: '/' },
+  { icon: Icons.FileText, label: 'Reports', href: '/reports' },
+  { icon: Icons.Settings, label: 'Settings', href: '/settings' },
+  { icon: Icons.HelpCircle, label: 'Help', href: '/help' },
 ];
 
 interface SidebarProps {
@@ -36,7 +37,7 @@ export function Sidebar({ onSearch }: SidebarProps) {
           {!isCollapsed && (
             <div className="mb-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                <Icons.Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                 <Input
                   type="search"
                   placeholder="Search services..."
@@ -56,7 +57,7 @@ export function Sidebar({ onSearch }: SidebarProps) {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              {isCollapsed ? <Icons.ChevronRight size={16} /> : <Icons.ChevronLeft size={16} />}
             </button>
           </div>
         </div>
@@ -68,7 +69,7 @@ export function Sidebar({ onSearch }: SidebarProps) {
                 href={item.href}
                 className="flex items-center gap-3 p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                {item.icon}
+                <item.icon className="w-4 h-4" />
                 <AnimatePresence>
                   {!isCollapsed && (
                     <motion.span

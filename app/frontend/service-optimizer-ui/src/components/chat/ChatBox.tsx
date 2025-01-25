@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { MessageCircle, Send, Minimize2, Maximize2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,10 +9,15 @@ import { ChatMessage, ChatBoxProps } from './types';
 import { findBestResponse } from './predefinedResponses';
 
 export function ChatBox({ className = '' }: ChatBoxProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([{
+    id: '0',
+    type: 'ai',
+    content: 'Welcome! I can help you analyze service performance and provide optimization recommendations. Feel free to ask questions about any service.',
+    timestamp: new Date()
+  }]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -50,7 +56,7 @@ export function ChatBox({ className = '' }: ChatBoxProps) {
   };
 
   return (
-    <Card className={`fixed top-4 right-4 ${isExpanded ? 'w-96' : 'w-auto'} shadow-lg transition-all duration-200 z-50 ${className}`}>
+    <Card className={`fixed bottom-4 right-4 ${isExpanded ? 'w-96' : 'w-auto'} shadow-xl transition-all duration-200 z-[9999] ${className}`}>
       <div className="p-4 border-b flex items-center justify-between bg-[#45B6B0] text-white rounded-t-lg">
         <div className="flex items-center gap-2">
           <MessageCircle className="w-5 h-5" />
@@ -75,27 +81,41 @@ export function ChatBox({ className = '' }: ChatBoxProps) {
           <ScrollArea className="h-96 p-4">
         <div className="space-y-4">
           {messages.map((message) => (
-            <div
+            <motion.div
               key={message.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-3 rounded-lg ${
+                className={`max-w-[80%] p-3 rounded-lg shadow-sm ${
                   message.type === 'user'
                     ? 'bg-[#45B6B0] text-white'
                     : 'bg-gray-100 text-gray-800'
-                }`}
+                } hover:shadow-md transition-shadow duration-200`}
               >
                 {message.content}
               </div>
-            </div>
+            </motion.div>
           ))}
           {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-gray-100 text-gray-800 p-3 rounded-lg">
-                AI is typing...
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="flex justify-start"
+            >
+              <div className="bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center gap-2">
+                <span>AI is typing</span>
+                <motion.span
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  ...
+                </motion.span>
               </div>
-            </div>
+            </motion.div>
           )}
           <div ref={messagesEndRef} />
         </div>

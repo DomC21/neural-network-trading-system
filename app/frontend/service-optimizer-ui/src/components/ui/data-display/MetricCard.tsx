@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Tooltip } from '@radix-ui/react-tooltip';
+import { Tooltip } from '../tooltip';
 
 interface MetricCardProps {
   title: string;

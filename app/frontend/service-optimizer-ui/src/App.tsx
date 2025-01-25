@@ -16,6 +16,7 @@ function App() {
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState<ServiceClassification | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchServices()
@@ -59,7 +60,7 @@ function App() {
     <ThemeProvider>
       <PageLayout>
         <div className="flex">
-          <Sidebar />
+          <Sidebar onSearch={setSearchQuery} />
           <main className="flex-1 ml-64 p-8">
             {/* Header */}
             <header className="mb-8">
@@ -108,7 +109,13 @@ function App() {
               <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                 <h2 className="text-xl font-semibold mb-4">Service Performance</h2>
                 <ServiceGrid
-                  services={services}
+                  services={services.filter(service => 
+                    searchQuery ? 
+                      service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      service.category.toLowerCase().includes(searchQuery.toLowerCase())
+                    : true
+                  )}
                   selectedServiceId={selectedServiceId}
                   onServiceSelect={handleServiceSelect}
                 />

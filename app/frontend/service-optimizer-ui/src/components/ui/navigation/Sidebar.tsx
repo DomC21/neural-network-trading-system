@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart, Settings, HelpCircle, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BarChart, Settings, HelpCircle, FileText, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Tooltip } from '@radix-ui/react-tooltip';
+import { Input } from '../input';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -16,8 +17,13 @@ const navItems: NavItem[] = [
   { icon: <HelpCircle className="w-5 h-5" />, label: 'Help', href: '/help' },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onSearch?: (query: string) => void;
+}
+
+export function Sidebar({ onSearch }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <motion.div
@@ -26,14 +32,33 @@ export function Sidebar() {
       className="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm z-40"
     >
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          {!isCollapsed && <span className="font-semibold text-gray-900 dark:text-white">Navigation</span>}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          {!isCollapsed && (
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                <Input
+                  type="search"
+                  placeholder="Search services..."
+                  className="pl-10 w-full bg-gray-50 dark:bg-gray-800"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    onSearch?.(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            {!isCollapsed && <span className="font-semibold text-gray-900 dark:text-white">Navigation</span>}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 p-2">

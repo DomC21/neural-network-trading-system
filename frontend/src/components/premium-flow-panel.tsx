@@ -29,8 +29,8 @@ import { Label } from "@/components/ui/label"
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-background border rounded p-2 shadow-lg">
-        <p className="text-sm font-medium">{label}</p>
+      <div className="bg-brand-gray-900 border border-brand-gray-700 rounded p-2 shadow-lg">
+        <p className="text-sm font-medium text-brand-gray-100">{label}</p>
         {payload.map((entry: any, index: number) => {
           // Format value based on data type
           let formattedValue = entry.value
@@ -45,8 +45,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           }
           
           return (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formattedValue}
+            <p key={index} className="text-sm text-brand-gray-200" style={{ color: entry.color }}>
+              <span className="text-brand-gray-400">{entry.name}:</span> {formattedValue}
             </p>
           )
         })}
@@ -288,53 +288,73 @@ export function PremiumFlowPanel() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Market-Wide Premium Flow</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl mb-2">Market-Wide Premium Flow</CardTitle>
+            <CardDescription className="text-brand-gray-300">
               {showIntraday 
                 ? "Track real-time market sentiment through minute-by-minute premium flow"
                 : "Analyze options premium flow trends across sectors"}
             </CardDescription>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="flex items-center space-x-2">
               <Switch
                 id="intraday-switch"
                 checked={showIntraday}
                 onCheckedChange={setShowIntraday}
+                className="data-[state=checked]:bg-brand-gold"
               />
-              <Label htmlFor="intraday-switch">Intraday View</Label>
+              <Label htmlFor="intraday-switch" className="text-brand-gray-200">Intraday View</Label>
             </div>
             <div className="w-full sm:w-48">
-              <Label htmlFor="type-select">Option Type</Label>
+              <Label htmlFor="type-select" className="text-brand-gray-200">Option Type</Label>
               <Select
                 value={selectedType}
                 onValueChange={setSelectedType}
               >
-                <SelectTrigger id="type-select">
+                <SelectTrigger 
+                  id="type-select"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                >
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-brand-gray-900 border-brand-gray-700">
                   {optionTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
+                    <SelectItem 
+                      key={type.value} 
+                      value={type.value}
+                      className="text-brand-gray-100 hover:bg-brand-gray-800 focus:bg-brand-gray-800"
+                    >
                       {type.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-48">
-              <Label htmlFor="sector-select">Sector</Label>
+            <div className="w-full sm:w-48">
+              <Label htmlFor="sector-select" className="text-brand-gray-200">Sector</Label>
               <Select
                 value={selectedSector}
                 onValueChange={setSelectedSector}
               >
-                <SelectTrigger id="sector-select">
+                <SelectTrigger 
+                  id="sector-select"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                >
                   <SelectValue placeholder="All Sectors" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sectors</SelectItem>
+                <SelectContent className="bg-brand-gray-900 border-brand-gray-700">
+                  <SelectItem 
+                    value="all"
+                    className="text-brand-gray-100 hover:bg-brand-gray-800 focus:bg-brand-gray-800"
+                  >
+                    All Sectors
+                  </SelectItem>
                   {sectors.map((sector) => (
-                    <SelectItem key={sector} value={sector}>
+                    <SelectItem 
+                      key={sector} 
+                      value={sector}
+                      className="text-brand-gray-100 hover:bg-brand-gray-800 focus:bg-brand-gray-800"
+                    >
                       {sector.charAt(0).toUpperCase() + sector.slice(1)}
                     </SelectItem>
                   ))}
@@ -346,24 +366,26 @@ export function PremiumFlowPanel() {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Premium Flow Trend */}
-        <Card className="p-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Premium Flow Trends</CardTitle>
+        <Card className="p-6 bg-brand-navy/30 border-brand-gray-700/50">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent font-semibold">Premium Flow Trends</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 {data.length > 0 ? (
                   <ComposedChart data={processDataForTrendline()}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted-foreground)/30)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--brand-gray-700)/30)" />
                     <XAxis 
                       dataKey="market_time" 
-                      stroke="hsl(var(--muted-foreground))"
+                      stroke="hsl(var(--brand-gray-400))"
+                      tick={{ fill: "hsl(var(--brand-gray-400))" }}
                       tickFormatter={(value) => showIntraday ? value.split(' ')[1] : value.split(' ')[0]}
                     />
                     <YAxis 
                       yAxisId="premium" 
-                      stroke="hsl(var(--muted-foreground))"
+                      stroke="hsl(var(--brand-gray-400))"
+                      tick={{ fill: "hsl(var(--brand-gray-400))" }}
                       tickFormatter={(value) => 
                         new Intl.NumberFormat('en-US', {
                           notation: 'compact',
@@ -388,17 +410,17 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="volume"
                       name="Volume"
-                      fill="#28479C"
+                      fill="hsl(var(--brand-accent))"
                       fillOpacity={0.1}
                       stroke="none"
                     />
-                    <Legend wrapperStyle={{ color: "hsl(var(--muted-foreground))" }} />
+                    <Legend wrapperStyle={{ color: "hsl(var(--brand-gray-400))" }} />
                     <Line
                       yAxisId="premium"
                       type="monotone"
                       dataKey="cumulative_call_premium"
                       name="Cumulative Call Premium"
-                      stroke="#33B890"
+                      stroke="hsl(var(--brand-teal))"
                       strokeWidth={2}
                       dot={false}
                     />
@@ -407,7 +429,7 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="cumulative_put_premium"
                       name="Cumulative Put Premium"
-                      stroke="#EC4B5E"
+                      stroke="hsl(var(--brand-cyan))"
                       strokeWidth={2}
                       dot={false}
                     />
@@ -416,7 +438,7 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="net_premium"
                       name="Net Premium"
-                      stroke="#28479C"
+                      stroke="hsl(var(--brand-accent))"
                       strokeWidth={2}
                       strokeDasharray="3 3"
                       dot={false}
@@ -428,7 +450,7 @@ export function PremiumFlowPanel() {
                           type="monotone"
                           dataKey="net_call_premium"
                           name="Net Call Flow"
-                          stroke="#33B890"
+                          stroke="hsl(var(--brand-teal))"
                           strokeWidth={1}
                           strokeDasharray="2 2"
                           opacity={0.5}
@@ -439,7 +461,7 @@ export function PremiumFlowPanel() {
                           type="monotone"
                           dataKey="net_put_premium"
                           name="Net Put Flow"
-                          stroke="#EC4B5E"
+                          stroke="hsl(var(--brand-cyan))"
                           strokeWidth={1}
                           strokeDasharray="2 2"
                           opacity={0.5}
@@ -450,7 +472,7 @@ export function PremiumFlowPanel() {
                           type="monotone"
                           dataKey="price"
                           name="Price"
-                          stroke="#28479C"
+                          stroke="hsl(var(--brand-accent))"
                           strokeWidth={1}
                           dot={false}
                         />
@@ -459,7 +481,13 @@ export function PremiumFlowPanel() {
                   </ComposedChart>
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-muted-foreground">
-                    {insightLoading ? "Loading data..." : error ? "No data available" : "No premium flow data found"}
+                    {insightLoading ? (
+                      <span className="text-brand-gray-400 animate-pulse transition-opacity duration-500 tracking-wide text-sm font-medium">Loading data...</span>
+                    ) : error ? (
+                      <span className="text-red-500/90">No data available</span>
+                    ) : (
+                      <span className="text-brand-gray-400 tracking-wide text-sm">No premium flow data found</span>
+                    )}
                   </div>
                 )}
               </ResponsiveContainer>
@@ -468,22 +496,22 @@ export function PremiumFlowPanel() {
         </Card>
 
         {/* Sector Heatmap */}
-        <Card className="p-4">
-          <CardHeader className="pb-2">
+        <Card className="p-6 bg-brand-navy/30 border-brand-gray-700/50">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Sector Premium Distribution</CardTitle>
-              <div className="flex gap-4">
+              <CardTitle className="text-lg bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent font-semibold">Sector Premium Distribution</CardTitle>
+              <div className="flex flex-wrap gap-4">
                 {Object.entries(descriptions).map(([sector, description]) => (
                   <TooltipProvider key={sector}>
                     <UITooltip>
                       <TooltipTrigger asChild>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1 text-sm text-brand-gray-400 hover:text-brand-gray-200 transition-colors">
                           <span className="capitalize">{sector}</span>
                           <HelpCircle className="h-4 w-4" />
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{description}</p>
+                      <TooltipContent className="bg-brand-gray-900 border-brand-gray-700">
+                        <p className="text-brand-gray-100">{description}</p>
                       </TooltipContent>
                     </UITooltip>
                   </TooltipProvider>
@@ -492,13 +520,13 @@ export function PremiumFlowPanel() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 {data.length > 0 ? (
                   <ComposedChart data={processDataForHeatmap()}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted-foreground)/30)" />
-                    <XAxis dataKey="sector" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis yAxisId="premium" stroke="hsl(var(--muted-foreground))"
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--brand-gray-700)/30)" />
+                    <XAxis dataKey="sector" stroke="hsl(var(--brand-gray-400))" />
+                    <YAxis yAxisId="premium" stroke="hsl(var(--brand-gray-400))"
                       tickFormatter={(value) => 
                         new Intl.NumberFormat('en-US', {
                           notation: 'compact',
@@ -511,20 +539,28 @@ export function PremiumFlowPanel() {
                     <YAxis
                       yAxisId="ratio"
                       orientation="right"
-                      stroke="#28479C"
+                      stroke="hsl(var(--brand-gray-400))"
+                      tick={{ fill: "hsl(var(--brand-gray-400))" }}
                       domain={[0, 1]}
                       tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
                     />
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip 
+                      content={<CustomTooltip />}
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--brand-gray-900))",
+                        border: "1px solid hsl(var(--brand-gray-700))",
+                        color: "hsl(var(--brand-gray-100))"
+                      }}
+                    />
                     <Area
                       yAxisId="premium"
                       type="monotone"
                       dataKey="volume"
-                      fill="#28479C"
+                      fill="hsl(var(--brand-gold))"
                       fillOpacity={0.1}
                       stroke="none"
                     />
-                    <Legend wrapperStyle={{ color: "hsl(var(--muted-foreground))" }} />
+                    <Legend wrapperStyle={{ color: "hsl(var(--brand-gray-400))" }} />
                     <Line
                       yAxisId="premium"
                       type="monotone"
@@ -562,14 +598,24 @@ export function PremiumFlowPanel() {
         </Card>
 
         {/* ChatGPT Insight Box */}
-        <Card className="bg-muted transition-all duration-300 hover:bg-muted/80">
+        <Card className="bg-brand-navy/30 border-brand-gray-700/50 transition-all duration-300 hover:bg-brand-navy/40">
           <CardContent className="pt-6">
             <div className="flex items-start space-x-4">
               <div className="shrink-0">
-                <MessageSquare className={`h-5 w-5 mt-0.5 transition-colors ${insightLoading ? 'animate-pulse text-muted-foreground/70' : error ? 'text-destructive' : 'text-primary'}`} />
+                <MessageSquare className={`h-5 w-5 mt-0.5 transition-all duration-300 ${
+                  insightLoading 
+                    ? 'animate-pulse text-brand-gray-400' 
+                    : error 
+                    ? 'text-red-500' 
+                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">
-                <p className={`text-sm leading-relaxed ${error ? 'text-destructive' : ''}`}>
+                <p className={`text-sm leading-relaxed ${
+                  error 
+                    ? 'text-red-500' 
+                    : 'text-brand-gray-200'
+                }`}>
                   {error || insight || (insightLoading ? "Analyzing premium flow patterns..." : "No insights available.")}
                 </p>
               </div>

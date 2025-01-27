@@ -35,7 +35,10 @@ export function ThemeProvider({
     root.classList.remove("light", "dark")
 
     // Set brand colors as CSS variables
-    root.style.setProperty('--brand-gold', '#FFD700')
+    root.style.setProperty('--brand-teal', '#2DD4BF')
+    root.style.setProperty('--brand-cyan', '#0EA5E9')
+    root.style.setProperty('--brand-accent', '#22D3EE')
+    root.style.setProperty('--brand-navy', '#0F172A')
     root.style.setProperty('--brand-black', '#000000')
     root.style.setProperty('--brand-white', '#FFFFFF')
     
@@ -61,19 +64,19 @@ export function ThemeProvider({
       if (systemTheme === "dark") {
         root.style.setProperty('--background', 'var(--brand-black)')
         root.style.setProperty('--foreground', 'var(--brand-gray-100)')
-        root.style.setProperty('--primary', 'var(--brand-gold)')
+        root.style.setProperty('--primary', 'var(--brand-teal)')
         root.style.setProperty('--muted', 'var(--brand-gray-800)')
         root.style.setProperty('--muted-foreground', 'var(--brand-gray-400)')
-        root.style.setProperty('--accent', 'var(--brand-gold)')
-        root.style.setProperty('--accent-foreground', 'var(--brand-black)')
+        root.style.setProperty('--accent', 'var(--brand-cyan)')
+        root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
       } else {
         root.style.setProperty('--background', 'var(--brand-white)')
         root.style.setProperty('--foreground', 'var(--brand-black)')
-        root.style.setProperty('--primary', 'var(--brand-gold)')
+        root.style.setProperty('--primary', 'var(--brand-teal)')
         root.style.setProperty('--muted', 'var(--brand-gray-100)')
         root.style.setProperty('--muted-foreground', 'var(--brand-gray-600)')
-        root.style.setProperty('--accent', 'var(--brand-gold)')
-        root.style.setProperty('--accent-foreground', 'var(--brand-black)')
+        root.style.setProperty('--accent', 'var(--brand-cyan)')
+        root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
       }
       return
     }
@@ -83,11 +86,11 @@ export function ThemeProvider({
     if (theme === "dark") {
       root.style.setProperty('--background', 'var(--brand-black)')
       root.style.setProperty('--foreground', 'var(--brand-gray-100)')
-      root.style.setProperty('--primary', 'var(--brand-gold)')
+      root.style.setProperty('--primary', 'var(--brand-teal)')
       root.style.setProperty('--muted', 'var(--brand-gray-800)')
       root.style.setProperty('--muted-foreground', 'var(--brand-gray-400)')
-      root.style.setProperty('--accent', 'var(--brand-gold)')
-      root.style.setProperty('--accent-foreground', 'var(--brand-black)')
+      root.style.setProperty('--accent', 'var(--brand-cyan)')
+      root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
       root.style.setProperty('--border', 'var(--brand-gray-800)')
       root.style.setProperty('--input', 'var(--brand-gray-900)')
     } else {

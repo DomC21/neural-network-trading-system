@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -64,7 +64,7 @@ export function MarketTidePanel() {
   }
 
   // Fetch market tide data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -90,7 +90,7 @@ export function MarketTidePanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [interval5m, granularity, setInsightLoading, setError, setData, setInsight, setHistoricalStats])
 
   // Initial data fetch
   useEffect(() => {

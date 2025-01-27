@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -53,7 +53,7 @@ export function CongressTradesPanel() {
   })
 
   // Fetch trades data
-  const fetchTrades = async () => {
+  const fetchTrades = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -80,7 +80,7 @@ export function CongressTradesPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [ticker, congressMember, startDate, endDate, setInsightLoading, setError, setTrades, setInsight])
 
   // Calculate most actively traded stocks for bar chart
   const getTopStocks = (): StockSummary[] => {
@@ -108,7 +108,7 @@ export function CongressTradesPanel() {
   // Initial data fetch
   useEffect(() => {
     fetchTrades()
-  }, [ticker, congressMember, startDate, endDate])
+  }, [ticker, congressMember, startDate, endDate, fetchTrades])
 
   return (
     <Card className="w-full">
@@ -252,9 +252,9 @@ export function CongressTradesPanel() {
                       fill="hsl(var(--brand-teal))"
                       radius={[4, 4, 0, 0]}
                       className="transition-all duration-300 cursor-pointer"
-                      onMouseOver={(data, index) => {
+                      onMouseOver={(_data, index) => {
                         // Add hover effect with scale transform and glow
-                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`);
+                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`) as HTMLElement;
                         if (bar) {
                           bar.setAttribute('fill', 'hsl(var(--brand-cyan))');
                           bar.style.transform = 'scaleY(1.05) translateY(-2px)';
@@ -263,9 +263,9 @@ export function CongressTradesPanel() {
                           bar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                         }
                       }}
-                      onMouseOut={(data, index) => {
+                      onMouseOut={(_data, index) => {
                         // Reset to original state with smooth transition
-                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`);
+                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`) as HTMLElement;
                         if (bar) {
                           bar.setAttribute('fill', 'hsl(var(--brand-teal))');
                           bar.style.transform = 'scaleY(1) translateY(0)';

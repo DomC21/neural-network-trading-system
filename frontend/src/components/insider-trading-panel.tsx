@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import {
@@ -58,7 +58,7 @@ export function InsiderTradingPanel() {
   }
 
   // Fetch insider trading data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -83,7 +83,7 @@ export function InsiderTradingPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [selectedRole, selectedType, setInsightLoading, setError, setData, setInsight])
 
   // Process data for treemap
   const processDataForTreemap = (): TreemapData[] => {
@@ -203,7 +203,7 @@ export function InsiderTradingPanel() {
                       labelStyle={{ color: "hsl(var(--brand-gray-400))" }}
                     />
                     {
-                      processDataForTreemap().map((entry, index) => (
+                      processDataForTreemap().map((_entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
                           fill={index % 2 === 0 ? "hsl(var(--brand-teal))" : "hsl(var(--brand-cyan))"}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import {
@@ -48,7 +48,7 @@ export function EarningsPanel() {
   const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`
 
   // Fetch earnings data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -73,7 +73,7 @@ export function EarningsPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [selectedSector, surpriseType, setInsightLoading, setError, setData, setInsight])
 
   // Initial data fetch
   useEffect(() => {

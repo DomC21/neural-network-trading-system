@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -21,10 +21,8 @@ import {
   Area,
 } from "recharts"
 import { MessageSquare, HelpCircle } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 
-// Custom tooltip component for the chart
+// Types for the tooltip component
 interface TooltipProps {
   active?: boolean;
   payload?: Array<{
@@ -33,36 +31,6 @@ interface TooltipProps {
     color: string;
   }>;
   label?: string;
-}
-
-const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-brand-gray-900 border border-brand-gray-700 rounded p-2 shadow-lg">
-        <p className="text-sm font-medium text-brand-gray-100">{label}</p>
-        {payload.map((entry, index) => {
-          // Format value based on data type
-          let formattedValue = entry.value
-          if (entry.name === "Price") {
-            formattedValue = `$${entry.value.toFixed(2)}`
-          } else if (entry.name === "Volume") {
-            formattedValue = entry.value.toLocaleString()
-          } else {
-            formattedValue = entry.value > 1000000 
-              ? `$${(entry.value / 1000000).toFixed(1)}M` 
-              : `$${(entry.value / 1000).toFixed(1)}K`
-          }
-          
-          return (
-            <p key={index} className="text-sm text-brand-gray-200" style={{ color: entry.color }}>
-              <span className="text-brand-gray-400">{entry.name}:</span> {formattedValue}
-            </p>
-          )
-        })}
-      </div>
-    )
-  }
-  return null
 }
 
 import {
@@ -162,8 +130,37 @@ export function PremiumFlowPanel() {
     }).format(amount)
   }
 
+  // Custom tooltip component using formatCurrency
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-brand-gray-900 border border-brand-gray-700 rounded p-2 shadow-lg">
+          <p className="text-sm font-medium text-brand-gray-100">{label}</p>
+          {payload.map((entry, index) => {
+            // Format value based on data type
+            let formattedValue: string
+            if (entry.name === "Price") {
+              formattedValue = `$${entry.value.toFixed(2)}`
+            } else if (entry.name === "Volume") {
+              formattedValue = entry.value.toLocaleString()
+            } else {
+              formattedValue = formatCurrency(entry.value)
+            }
+            
+            return (
+              <p key={index} className="text-sm text-brand-gray-200" style={{ color: entry.color }}>
+                <span className="text-brand-gray-400">{entry.name}:</span> {formattedValue}
+              </p>
+            )
+          })}
+        </div>
+      )
+    }
+    return null
+  }
+
   // Fetch premium flow data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -190,10 +187,10 @@ export function PremiumFlowPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [selectedType, selectedSector, showIntraday, setInsightLoading, setError, setData, setInsight, setHistoricalStats])
 
   // Fetch sector descriptions
-  const fetchDescriptions = async () => {
+  const fetchDescriptions = useCallback(async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/premium-flow/sectors`
@@ -203,7 +200,7 @@ export function PremiumFlowPanel() {
     } catch (error) {
       console.error("Error fetching sector descriptions:", error)
     }
-  }
+  }, [setDescriptions])
 
   // Process data for heatmap
   const processDataForHeatmap = () => {

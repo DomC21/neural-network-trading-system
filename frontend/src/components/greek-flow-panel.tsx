@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import {
@@ -56,7 +56,7 @@ export function GreekFlowPanel() {
   const tickers = ["AAPL", "TSLA", "GOOGL", "MSFT", "AMZN"]
 
   // Fetch Greek flow data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -80,10 +80,10 @@ export function GreekFlowPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [selectedTicker, setInsightLoading, setError, setData, setInsight])
 
   // Fetch Greek descriptions
-  const fetchDescriptions = async () => {
+  const fetchDescriptions = useCallback(async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/greek-flow/descriptions`
@@ -93,7 +93,7 @@ export function GreekFlowPanel() {
     } catch (error) {
       console.error("Error fetching Greek descriptions:", error)
     }
-  }
+  }, [setDescriptions])
 
   // Initial data fetch
   useEffect(() => {

@@ -104,7 +104,7 @@ export function InsiderTradingPanel() {
   // Initial data fetch
   useEffect(() => {
     fetchData()
-  }, [selectedRole, selectedType])
+  }, [selectedRole, selectedType, fetchData])
 
   return (
     <Card className="w-full">
@@ -125,7 +125,7 @@ export function InsiderTradingPanel() {
               >
                 <SelectTrigger 
                   id="role-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Roles" />
                 </SelectTrigger>
@@ -156,7 +156,7 @@ export function InsiderTradingPanel() {
               >
                 <SelectTrigger 
                   id="type-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
@@ -190,7 +190,7 @@ export function InsiderTradingPanel() {
                     data={processDataForTreemap()}
                     dataKey="size"
                     stroke="hsl(var(--brand-gray-900))"
-                    fill="hsl(var(--brand-gold))"
+                    fill="hsl(var(--brand-teal))"
                   >
                     <Tooltip
                       formatter={(value: number) => [formatCurrency(value), 'Trading Volume']}
@@ -239,7 +239,7 @@ export function InsiderTradingPanel() {
                     ? 'animate-pulse text-brand-gray-400' 
                     : error 
                     ? 'text-red-500' 
-                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                    : 'text-brand-teal hover:text-brand-cyan hover:scale-110'
                 }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">

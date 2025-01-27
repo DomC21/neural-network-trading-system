@@ -99,7 +99,7 @@ export function GreekFlowPanel() {
   useEffect(() => {
     fetchData()
     fetchDescriptions()
-  }, [selectedTicker])
+  }, [selectedTicker, fetchData, fetchDescriptions])
 
   return (
     <Card className="w-full">
@@ -119,7 +119,7 @@ export function GreekFlowPanel() {
             >
               <SelectTrigger 
                 id="ticker-select"
-                className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
               >
                 <SelectValue placeholder="Select stock" />
               </SelectTrigger>
@@ -191,7 +191,7 @@ export function GreekFlowPanel() {
                     <Line
                       type="monotone"
                       dataKey="delta"
-                      stroke="hsl(var(--brand-gold))"
+                      stroke="hsl(var(--brand-teal))"
                       strokeWidth={2}
                       name="Delta"
                     />
@@ -236,7 +236,7 @@ export function GreekFlowPanel() {
                     ? 'animate-pulse text-brand-gray-400' 
                     : error 
                     ? 'text-red-500' 
-                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                    : 'text-brand-teal hover:text-brand-cyan hover:scale-110'
                 }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">

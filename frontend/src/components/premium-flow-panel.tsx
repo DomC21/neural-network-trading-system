@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -26,12 +25,22 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
 // Custom tooltip component for the chart
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    name: string;
+    color: string;
+  }>;
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-brand-gray-900 border border-brand-gray-700 rounded p-2 shadow-lg">
         <p className="text-sm font-medium text-brand-gray-100">{label}</p>
-        {payload.map((entry: any, index: number) => {
+        {payload.map((entry, index) => {
           // Format value based on data type
           let formattedValue = entry.value
           if (entry.name === "Price") {
@@ -127,7 +136,7 @@ export function PremiumFlowPanel() {
   }, [showIntraday])
 
   // Initialize historical stats
-  const [historicalStats, setHistoricalStats] = useState<HistoricalStats>({
+  const [, setHistoricalStats] = useState<HistoricalStats>({
     max_call_premium: 0,
     min_call_premium: 0,
     max_put_premium: 0,
@@ -144,7 +153,7 @@ export function PremiumFlowPanel() {
   ]
 
   // Format currency
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -281,7 +290,7 @@ export function PremiumFlowPanel() {
   useEffect(() => {
     fetchData()
     fetchDescriptions()
-  }, [selectedType, selectedSector, showIntraday])
+  }, [selectedType, selectedSector, showIntraday, fetchData, fetchDescriptions])
 
   return (
     <Card className="w-full">
@@ -301,7 +310,7 @@ export function PremiumFlowPanel() {
                 id="intraday-switch"
                 checked={showIntraday}
                 onCheckedChange={setShowIntraday}
-                className="data-[state=checked]:bg-brand-gold"
+                className="data-[state=checked]:bg-gradient-to-r from-brand-teal to-brand-cyan"
               />
               <Label htmlFor="intraday-switch" className="text-brand-gray-200">Intraday View</Label>
             </div>
@@ -313,7 +322,7 @@ export function PremiumFlowPanel() {
               >
                 <SelectTrigger 
                   id="type-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
@@ -338,7 +347,7 @@ export function PremiumFlowPanel() {
               >
                 <SelectTrigger 
                   id="sector-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Sectors" />
                 </SelectTrigger>
@@ -399,7 +408,7 @@ export function PremiumFlowPanel() {
                       <YAxis
                         yAxisId="price"
                         orientation="right"
-                        stroke="#28479C"
+                        stroke="hsl(var(--brand-accent))"
                         domain={['auto', 'auto']}
                         tickFormatter={(value) => value.toFixed(2)}
                       />
@@ -556,7 +565,7 @@ export function PremiumFlowPanel() {
                       yAxisId="premium"
                       type="monotone"
                       dataKey="volume"
-                      fill="hsl(var(--brand-gold))"
+                      fill="hsl(var(--brand-accent))"
                       fillOpacity={0.1}
                       stroke="none"
                     />
@@ -566,7 +575,7 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="callPremium"
                       name="Call Premium"
-                      stroke="#33B890"
+                      stroke="hsl(var(--brand-teal))"
                       strokeWidth={2}
                     />
                     <Line
@@ -574,7 +583,7 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="putPremium"
                       name="Put Premium"
-                      stroke="#EC4B5E"
+                      stroke="hsl(var(--brand-cyan))"
                       strokeWidth={2}
                     />
                     <Line
@@ -582,14 +591,20 @@ export function PremiumFlowPanel() {
                       type="monotone"
                       dataKey="ratio"
                       name="Call/Put Ratio"
-                      stroke="#28479C"
+                      stroke="hsl(var(--brand-accent))"
                       strokeWidth={1}
                       strokeDasharray="3 3"
                     />
                   </ComposedChart>
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-muted-foreground">
-                    {insightLoading ? "Loading data..." : error ? "No data available" : "No sector premium data found"}
+                    {insightLoading ? (
+                      <span className="text-brand-gray-400 animate-pulse transition-opacity duration-500 tracking-wide text-sm font-medium">Loading data...</span>
+                    ) : error ? (
+                      <span className="text-red-500/90">No data available</span>
+                    ) : (
+                      <span className="text-brand-gray-400 tracking-wide text-sm">No sector premium data found</span>
+                    )}
                   </div>
                 )}
               </ResponsiveContainer>
@@ -607,7 +622,7 @@ export function PremiumFlowPanel() {
                     ? 'animate-pulse text-brand-gray-400' 
                     : error 
                     ? 'text-red-500' 
-                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                    : 'text-brand-teal hover:text-brand-cyan hover:scale-110'
                 }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">

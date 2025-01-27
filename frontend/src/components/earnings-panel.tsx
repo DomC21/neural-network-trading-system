@@ -78,7 +78,7 @@ export function EarningsPanel() {
   // Initial data fetch
   useEffect(() => {
     fetchData()
-  }, [selectedSector, surpriseType])
+  }, [selectedSector, surpriseType, fetchData])
 
   return (
     <Card className="w-full">
@@ -99,7 +99,7 @@ export function EarningsPanel() {
               >
                 <SelectTrigger 
                   id="sector-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Sectors" />
                 </SelectTrigger>
@@ -130,7 +130,7 @@ export function EarningsPanel() {
               >
                 <SelectTrigger 
                   id="surprise-select"
-                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-gold focus:ring-brand-gold/20"
+                  className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-brand-cyan/20"
                 >
                   <SelectValue placeholder="All Surprises" />
                 </SelectTrigger>
@@ -205,7 +205,7 @@ export function EarningsPanel() {
                     <Scatter
                       name="Companies"
                       data={data}
-                      fill="hsl(var(--brand-gold))"
+                      fill="hsl(var(--brand-teal))"
                     />
                   </ScatterChart>
                 ) : (
@@ -234,7 +234,7 @@ export function EarningsPanel() {
                     ? 'animate-pulse text-brand-gray-400' 
                     : error 
                     ? 'text-red-500' 
-                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                    : 'text-brand-teal hover:text-brand-cyan hover:scale-110'
                 }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">

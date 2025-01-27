@@ -95,7 +95,7 @@ export function MarketTidePanel() {
   // Initial data fetch
   useEffect(() => {
     fetchData()
-  }, [interval5m, granularity])
+  }, [interval5m, granularity, fetchData])
 
   return (
     <Card className="w-full">
@@ -116,7 +116,7 @@ export function MarketTidePanel() {
                 checked={interval5m}
                 onCheckedChange={setInterval5m}
                 disabled={granularity === "daily"}
-                className="data-[state=checked]:bg-brand-gold"
+                className="data-[state=checked]:bg-gradient-to-r from-brand-teal to-brand-cyan"
               />
               <Label htmlFor="interval-switch" className="text-brand-gray-200">5-Minute Intervals</Label>
             </div>
@@ -125,7 +125,7 @@ export function MarketTidePanel() {
                 id="granularity-switch"
                 checked={granularity === "daily"}
                 onCheckedChange={(checked) => setGranularity(checked ? "daily" : "minute")}
-                className="data-[state=checked]:bg-brand-gold"
+                className="data-[state=checked]:bg-gradient-to-r from-brand-teal to-brand-cyan"
               />
               <Label htmlFor="granularity-switch" className="text-brand-gray-200">Daily View</Label>
             </div>
@@ -275,7 +275,7 @@ export function MarketTidePanel() {
                     ? 'animate-pulse text-brand-gray-400' 
                     : error 
                     ? 'text-red-500' 
-                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                    : 'text-brand-teal hover:text-brand-cyan hover:scale-110'
                 }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">

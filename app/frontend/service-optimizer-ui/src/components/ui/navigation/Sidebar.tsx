@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { Icons } from '../icons';
 import { Tooltip } from '../tooltip';
@@ -27,10 +26,8 @@ export function Sidebar({ onSearch }: SidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <motion.div
-      initial={false}
-      animate={{ width: isCollapsed ? 64 : 240 }}
-      className="fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm z-40"
+    <div
+      className={`fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm z-40 transition-all duration-200 ${isCollapsed ? 'w-16' : 'w-60'}`}
     >
       <div className="flex flex-col h-full">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -70,23 +67,16 @@ export function Sidebar({ onSearch }: SidebarProps) {
                 className="flex items-center gap-3 p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
                 <item.icon className="w-4 h-4" />
-                <AnimatePresence>
-                  {!isCollapsed && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="whitespace-nowrap"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {!isCollapsed && (
+                  <span className="whitespace-nowrap animate-fade-in">
+                    {item.label}
+                  </span>
+                )}
               </a>
             </Tooltip>
           ))}
         </nav>
       </div>
-    </motion.div>
+    </div>
   );
 }

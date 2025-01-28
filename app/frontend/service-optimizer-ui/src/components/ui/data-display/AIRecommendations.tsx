@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+// Removed framer-motion import
 import { Card, CardHeader, CardTitle, CardContent } from '../base/Card';
 import { Button } from '../base/Button';
 import { TrendingUp, AlertCircle, BarChart } from 'lucide-react';
@@ -35,11 +35,7 @@ export function AIRecommendations({ analysis }: AIRecommendationsProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Performance Analysis */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-start space-x-4"
-        >
+        <div className="flex items-start space-x-4 animate-fade-in">
           <div className="p-2 rounded bg-muted">
             <TrendingUp className="w-4 h-4 text-primary" />
           </div>
@@ -52,15 +48,10 @@ export function AIRecommendations({ analysis }: AIRecommendationsProps) {
               Profit Trend: {analysis.market_insights.profit_trend}
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Market Position */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex items-start space-x-4"
-        >
+        <div className="flex items-start space-x-4 animate-fade-in">
           <div className="p-2 rounded bg-muted">
             <BarChart className="w-4 h-4 text-primary" />
           </div>
@@ -80,15 +71,10 @@ export function AIRecommendations({ analysis }: AIRecommendationsProps) {
               </p>
             )}
           </div>
-        </motion.div>
+        </div>
 
         {/* Recommendations */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex items-start space-x-4"
-        >
+        <div className="flex items-start space-x-4 animate-fade-in">
           <div className="p-2 rounded bg-muted">
             <AlertCircle className="w-4 h-4 text-primary" />
           </div>
@@ -96,20 +82,17 @@ export function AIRecommendations({ analysis }: AIRecommendationsProps) {
             <h3 className="text-sm font-medium">Key Recommendations</h3>
             <ul className="mt-2 space-y-2">
               {analysis.optimization_suggestions.map((suggestion, index) => (
-                <motion.li
+                <li
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  className="flex items-start space-x-2"
+                  className="flex items-start space-x-2 animate-fade-in"
                 >
                   <span className="text-primary">•</span>
                   <span className="text-sm text-muted-foreground">{suggestion}</span>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </div>
-        </motion.div>
+        </div>
 
         <div className="flex justify-end space-x-2 mt-4">
           <Button variant="outline" size="sm">

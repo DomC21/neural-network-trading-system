@@ -1,5 +1,4 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { motion } from 'framer-motion';
 
 interface ServiceMetricsChartProps {
   data: {
@@ -12,12 +11,7 @@ interface ServiceMetricsChartProps {
 
 export function ServiceMetricsChart({ data, height = 300 }: ServiceMetricsChartProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="w-full bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
-    >
+    <div className="w-full bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 animate-fade-in">
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -58,6 +52,6 @@ export function ServiceMetricsChart({ data, height = 300 }: ServiceMetricsChartP
           />
         </LineChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

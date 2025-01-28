@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { ThemeProvider } from './components/ui/theme/ThemeProvider';
-import { Container, Grid, Section } from './components/ui/layout';
+import { Container, Section } from './components/ui/layout';
 import { PageLayout } from './components/ui/layout/PageLayout';
 import { Sidebar } from './components/ui/navigation/Sidebar';
 import { ServiceGrid } from './components/ui/data-display/ServiceGrid';
@@ -70,85 +69,57 @@ function App() {
             <Container>
               {/* Header Section */}
               <Section>
-                <motion.div 
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-between"
-                >
+                <div className="flex items-center justify-between">
                   <div>
                     <h1 className="text-4xl font-bold text-foreground">Service Dashboard</h1>
                     <p className="text-muted-foreground mt-1">Monitor and optimize service performance</p>
                   </div>
                   <img src="/mss_logo.svg" alt="MSS Logo" className="h-12" />
-                </motion.div>
+                </div>
               </Section>
 
               {/* Summary Metrics Section */}
               <Section title="Performance Overview">
-                <Grid cols={4} gap={6}>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 }}
-                  >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="animate-fade-in">
                     <MetricCard
                       title="Total Revenue"
                       value={`$${totalRevenue.toLocaleString()}`}
                       icon={<Icons.DollarSign className="w-5 h-5 text-green-600" />}
                       trend={{ value: 12.5, isPositive: true }}
-                      tooltipContent="Total revenue across all services"
                     />
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
+                  </div>
+                  <div className="animate-fade-in">
                     <MetricCard
                       title="Average Margin"
                       value={`${averageMargin.toFixed(1)}%`}
                       icon={<Icons.TrendingUp className="w-5 h-5 text-blue-600" />}
                       trend={{ value: 2.3, isPositive: true }}
-                      tooltipContent="Average profit margin across all services"
                     />
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.3 }}
-                  >
+                  </div>
+                  <div className="animate-fade-in">
                     <MetricCard
                       title="Total Usage"
                       value={totalUsage.toLocaleString()}
                       icon={<Icons.Users className="w-5 h-5 text-purple-600" />}
                       trend={{ value: 8.7, isPositive: true }}
-                      tooltipContent="Total number of service usages"
                     />
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 }}
-                  >
+                  </div>
+                  <div className="animate-fade-in">
                     <MetricCard
                       title="Services Needing Optimization"
                       value={profitabilityData[1].value}
                       icon={<Icons.TrendingDown className="w-5 h-5 text-yellow-600" />}
-                      tooltipContent="Number of services requiring optimization"
                     />
-                  </motion.div>
-                </Grid>
+                  </div>
+                </div>
               </Section>
 
               {/* Main Content Section */}
               <Section title="Service Analysis">
-                <Grid cols={3} gap={6}>
-                  <div className="col-span-2">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-card rounded-lg p-6 border"
-                    >
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2">
+                    <div className="bg-white dark:bg-gray-800 rounded p-6 border">
                       <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-semibold">Service Performance</h2>
                         <Button variant="outline" size="sm">
@@ -167,35 +138,22 @@ function App() {
                         selectedServiceId={selectedServiceId}
                         onServiceSelect={handleServiceSelect}
                       />
-                    </motion.div>
+                    </div>
                   </div>
                   <div className="space-y-6">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="bg-card rounded-lg p-6 border"
-                    >
+                    <div className="bg-white dark:bg-gray-800 rounded p-6 border">
                       <h2 className="text-xl font-semibold mb-4">Profitability Distribution</h2>
                       <PieChart data={profitabilityData} height={300} />
-                    </motion.div>
+                    </div>
 
                     {selectedServiceId && aiAnalysis && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                      >
+                      <div className="animate-fade-in">
                         <AIRecommendations analysis={aiAnalysis} />
-                      </motion.div>
+                      </div>
                     )}
 
                     {selectedServiceId && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                      >
+                      <div className="animate-fade-in">
                         <ServiceSimulator
                           initialRevenue={services.find(s => s.id === selectedServiceId)?.metrics.revenue || 0}
                           initialUsage={services.find(s => s.id === selectedServiceId)?.metrics.usage_count || 0}
@@ -205,10 +163,10 @@ function App() {
                             // TODO: Implement simulation logic
                           }}
                         />
-                      </motion.div>
+                      </div>
                     )}
                   </div>
-                </Grid>
+                </div>
               </Section>
             </Container>
           </main>

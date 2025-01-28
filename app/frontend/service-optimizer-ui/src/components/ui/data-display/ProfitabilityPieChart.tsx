@@ -1,5 +1,4 @@
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { motion } from 'framer-motion';
 
 interface ProfitabilityData {
   name: string;
@@ -14,12 +13,7 @@ interface ProfitabilityPieChartProps {
 
 export function ProfitabilityPieChart({ data, height = 300 }: ProfitabilityPieChartProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="w-full bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
-    >
+    <div className="w-full bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 animate-fade-in">
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
           <Pie
@@ -46,6 +40,6 @@ export function ProfitabilityPieChart({ data, height = 300 }: ProfitabilityPieCh
           <Legend />
         </PieChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { DollarSign, Users, TrendingUp } from 'lucide-react';
-import { Tooltip } from '@radix-ui/react-tooltip';
 import * as Slider from '@radix-ui/react-slider';
 
 interface ServiceSimulatorProps {
@@ -27,22 +25,14 @@ export function ServiceSimulator({ initialRevenue, initialUsage, initialMargin, 
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
-      className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 space-y-6"
+    <div
+      className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 space-y-6 animate-fade-in"
     >
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Service Simulation</h3>
         <div className="flex items-center gap-2">
-          <Tooltip>
-            <div className="p-2 text-sm">
-              Adjust metrics to see potential impact on service performance
-            </div>
-          </Tooltip>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            Drag sliders to simulate changes
+            Adjust sliders to simulate performance changes
           </span>
         </div>
       </div>
@@ -126,15 +116,13 @@ export function ServiceSimulator({ initialRevenue, initialUsage, initialMargin, 
           </Slider.Root>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+        <button
           onClick={handleSimulate}
           className="w-full py-2 px-4 bg-[#45B6B0] hover:bg-[#3a9a95] text-white rounded-lg transition-colors flex items-center justify-center gap-2 mt-4"
         >
           <span>Apply Simulation</span>
-        </motion.button>
+        </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

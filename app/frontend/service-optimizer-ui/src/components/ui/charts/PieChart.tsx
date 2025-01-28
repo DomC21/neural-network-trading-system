@@ -1,5 +1,5 @@
 import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, TooltipProps } from 'recharts';
-import { motion } from 'framer-motion';
+// Removed framer-motion import
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface PieChartProps {
@@ -18,12 +18,7 @@ export function PieChart({
   tooltipFormatter = (value) => `${value}`,
 }: PieChartProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="w-full bg-card p-4 rounded-lg border border-border"
-    >
+    <div className="w-full bg-card p-4 rounded-lg border border-border animate-fade-in">
       <ResponsiveContainer width="100%" height={height}>
         <RechartsPieChart>
           <Pie
@@ -50,6 +45,6 @@ export function PieChart({
           <Legend />
         </RechartsPieChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

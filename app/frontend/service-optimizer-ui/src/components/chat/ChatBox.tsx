@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { MessageCircle, Send, Minimize2, Maximize2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -81,12 +80,9 @@ export function ChatBox({ className = '' }: ChatBoxProps) {
           <ScrollArea className="h-96 p-4">
         <div className="space-y-4">
           {messages.map((message) => (
-            <motion.div
+            <div
               key={message.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
             >
               <div
                 className={`max-w-[80%] p-3 rounded-lg shadow-sm ${
@@ -97,25 +93,15 @@ export function ChatBox({ className = '' }: ChatBoxProps) {
               >
                 {message.content}
               </div>
-            </motion.div>
+            </div>
           ))}
           {isTyping && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.2 }}
-              className="flex justify-start"
-            >
+            <div className="flex justify-start animate-fade-in">
               <div className="bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center gap-2">
                 <span>AI is typing</span>
-                <motion.span
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  ...
-                </motion.span>
+                <span className="animate-pulse">...</span>
               </div>
-            </motion.div>
+            </div>
           )}
           <div ref={messagesEndRef} />
         </div>

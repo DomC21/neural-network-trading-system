@@ -1,9 +1,9 @@
 import { ResponsiveContainer, BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, TooltipProps } from 'recharts';
-import { motion } from 'framer-motion';
+// Removed framer-motion import
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface BarChartProps {
-  data: Array<Record<string, any>>;
+  data: Array<Record<string, number | string>>;
   height?: number;
   bars: Array<{
     key: string;
@@ -13,7 +13,7 @@ interface BarChartProps {
   }>;
   xAxisKey: string;
   tooltipFormatter?: TooltipProps<ValueType, NameType>['formatter'];
-  yAxisFormatter?: (value: any) => string;
+  yAxisFormatter?: (value: number) => string;
 }
 
 export function BarChart({
@@ -25,12 +25,7 @@ export function BarChart({
   yAxisFormatter = (value) => `${value}`,
 }: BarChartProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="w-full bg-card p-4 rounded-lg border border-border"
-    >
+    <div className="w-full bg-card p-4 rounded-lg border border-border animate-fade-in">
       <ResponsiveContainer width="100%" height={height}>
         <RechartsBarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.1} />
@@ -67,6 +62,6 @@ export function BarChart({
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

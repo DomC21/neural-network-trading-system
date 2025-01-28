@@ -1,6 +1,4 @@
 import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
-import { Tooltip } from '../tooltip';
 
 interface MetricCardProps {
   title: string;
@@ -11,7 +9,7 @@ interface MetricCardProps {
     value: number;
     isPositive: boolean;
   };
-  tooltipContent?: string;
+  // Removed tooltipContent prop
 }
 
 export function MetricCard({
@@ -20,38 +18,27 @@ export function MetricCard({
   icon,
   description,
   trend,
-  tooltipContent,
+  // Removed tooltipContent from props
 }: MetricCardProps) {
   return (
-    <motion.div
-      whileHover={{ y: -2 }}
-      className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
-    >
-      <Tooltip content={tooltipContent}>
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">{value}</span>
-              {trend && (
-                <span
-                  className={`text-sm font-medium ${
-                    trend.isPositive ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
-                </span>
-              )}
-            </div>
-            {description && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
+    <div className="bg-white dark:bg-gray-800 p-4 rounded border border-gray-200 dark:border-gray-700 transition-transform duration-200 hover:-translate-y-0.5">
+      <div className="flex justify-between">
+        <div>
+          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</span>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">{value}</span>
+            {trend && (
+              <span className={trend.isPositive ? 'text-green-600' : 'text-red-600'}>
+                {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
+              </span>
             )}
           </div>
-          <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            {icon}
-          </div>
+          {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         </div>
-      </Tooltip>
-    </motion.div>
+        <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded">
+          {icon}
+        </div>
+      </div>
+    </div>
   );
 }

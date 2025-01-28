@@ -1,3 +1,5 @@
+import { Service } from './types';
+
 const API_URL = 'http://172.16.1.2:8000/api';
 
 export async function fetchServices() {
@@ -24,7 +26,7 @@ export async function fetchServices() {
   }
 }
 
-export async function analyzeService(service: any) {
+export async function analyzeService(service: Service) {
   try {
     const response = await fetch(`${API_URL}/services/analyze`, {
       method: 'POST',
@@ -48,7 +50,7 @@ export async function analyzeService(service: any) {
   }
 }
 
-export async function createService(service: any) {
+export async function createService(service: Service) {
   const response = await fetch(`${API_URL}/services`, {
     method: 'POST',
     headers: {
@@ -64,7 +66,13 @@ export async function createService(service: any) {
   return response.json();
 }
 
-export async function updateThresholds(thresholds: any): Promise<void> {
+interface ThresholdUpdate {
+  profitableMin: number;
+  optimizationMin: number;
+  unprofitableMax: number;
+}
+
+export async function updateThresholds(thresholds: ThresholdUpdate): Promise<void> {
   const response = await fetch(`${API_URL}/thresholds`, {
     method: 'POST',
     headers: {

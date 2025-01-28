@@ -10,6 +10,25 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+        brand: {
+          cyan: '#0EA5E9',
+          teal: '#2DD4BF',
+          accent: '#22D3EE',
+          navy: '#0F172A',
+          black: '#000000',
+          white: '#FFFFFF',
+          gray: {
+            100: '#F8FAFC',
+            200: '#E2E8F0',
+            300: '#CBD5E1',
+            400: '#94A3B8',
+            500: '#64748B',
+            600: '#475569',
+            700: '#334155',
+            800: '#1E293B',
+            900: '#0F172A'
+          }
+        },
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',

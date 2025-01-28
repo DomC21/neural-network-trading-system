@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -53,7 +53,7 @@ export function CongressTradesPanel() {
   })
 
   // Fetch trades data
-  const fetchTrades = async () => {
+  const fetchTrades = useCallback(async () => {
     setInsightLoading(true)
     setError("")
     try {
@@ -80,7 +80,7 @@ export function CongressTradesPanel() {
     } finally {
       setInsightLoading(false)
     }
-  }
+  }, [ticker, congressMember, startDate, endDate, setInsightLoading, setError, setTrades, setInsight])
 
   // Calculate most actively traded stocks for bar chart
   const getTopStocks = (): StockSummary[] => {
@@ -108,74 +108,114 @@ export function CongressTradesPanel() {
   // Initial data fetch
   useEffect(() => {
     fetchTrades()
-  }, [ticker, congressMember, startDate, endDate])
+  }, [ticker, congressMember, startDate, endDate, fetchTrades])
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Congress Trades</CardTitle>
-        <CardDescription>
-          Track and analyze recent trading activity by members of Congress
-        </CardDescription>
+      <CardHeader className="mb-8 px-6">
+        <div className="space-y-2">
+          <CardTitle className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent">
+            Congress Trades
+          </CardTitle>
+          <CardDescription className="text-xl text-brand-gray-300 leading-relaxed">
+            Track and analyze recent trading activity by members of Congress
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-10 px-6">
         {/* Filters */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 sm:px-0">
-          <div className="space-y-2 w-full">
-            <Label htmlFor="ticker">Stock Ticker</Label>
-            <Input
+        <Card className="p-6 bg-brand-navy/30 border-brand-gray-700/50">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent">Filters</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="ticker" className="text-brand-gray-200 font-semibold tracking-wide text-sm uppercase">Stock Ticker</Label>
+                <Input
               id="ticker"
-              placeholder="e.g. AAPL"
+              placeholder="Enter stock symbol (e.g. AAPL)"
               value={ticker}
               onChange={(e) => setTicker(e.target.value)}
               onBlur={fetchTrades}
+              className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 placeholder:text-brand-gray-400 placeholder:text-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20 hover:border-brand-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-brand-cyan/5"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="member">Congress Member</Label>
+          <div className="space-y-3">
+            <Label htmlFor="member" className="text-brand-gray-200 font-semibold tracking-wide text-sm uppercase">Congress Member</Label>
             <Input
               id="member"
-              placeholder="Member name"
+              placeholder="Search by member name"
               value={congressMember}
               onChange={(e) => setCongressMember(e.target.value)}
               onBlur={fetchTrades}
+              className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 placeholder:text-brand-gray-400 placeholder:text-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20 hover:border-brand-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-brand-cyan/5"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="start-date">Start Date</Label>
+          <div className="space-y-3">
+            <Label htmlFor="start-date" className="text-brand-gray-200 font-semibold tracking-wide text-sm uppercase">Start Date</Label>
             <Input
               id="start-date"
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               onBlur={fetchTrades}
+              className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20 hover:border-brand-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-brand-cyan/5"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="end-date">End Date</Label>
+          <div className="space-y-3">
+            <Label htmlFor="end-date" className="text-brand-gray-200 font-semibold tracking-wide text-sm uppercase">End Date</Label>
             <Input
               id="end-date"
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               onBlur={fetchTrades}
+              className="bg-brand-gray-900 border-brand-gray-700 text-brand-gray-100 focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20 hover:border-brand-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-brand-cyan/5"
             />
-          </div>
-        </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Bar Chart */}
-        <Card className="p-4">
-          <CardHeader>
-            <CardTitle className="text-lg">Most Actively Traded Stocks</CardTitle>
+        <Card className="p-6 bg-brand-navy/30 border-brand-gray-700/50 transition-all duration-300 hover:bg-brand-navy/40">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent">Most Actively Traded Stocks</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 {trades.length > 0 ? (
                   <BarChart data={getTopStocks()}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted-foreground)/30)" />
-                    <XAxis dataKey="ticker" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))"
+                    <CartesianGrid 
+                      strokeDasharray="3 3" 
+                      stroke="hsl(var(--brand-gray-700)/20)" 
+                      vertical={false}
+                    />
+                    <XAxis 
+                      dataKey="ticker" 
+                      stroke="hsl(var(--brand-gray-400))"
+                      tick={{ 
+                        fill: "hsl(var(--brand-gray-200))",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        letterSpacing: '0.05em'
+                      }}
+                      tickLine={{ stroke: "hsl(var(--brand-gray-700))" }}
+                      axisLine={{ stroke: "hsl(var(--brand-gray-700))" }}
+                      tickFormatter={(value) => value.toUpperCase()}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--brand-gray-400))"
+                      tick={{ 
+                        fill: "hsl(var(--brand-gray-200))",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        letterSpacing: '0.05em'
+                      }}
+                      tickLine={{ stroke: "hsl(var(--brand-gray-700))" }}
+                      axisLine={{ stroke: "hsl(var(--brand-gray-700))" }}
                       tickFormatter={(value) => 
                         new Intl.NumberFormat('en-US', {
                           notation: 'compact',
@@ -188,17 +228,75 @@ export function CongressTradesPanel() {
                     <Tooltip
                       formatter={(value: number) => [formatCurrency(value), 'Total Amount']}
                       contentStyle={{
-                        backgroundColor: "hsl(var(--background))",
-                        border: "1px solid hsl(var(--border))",
-                        color: "hsl(var(--foreground))"
+                        backgroundColor: "hsl(var(--brand-navy))",
+                        border: "1px solid hsl(var(--brand-gray-700))",
+                        color: "hsl(var(--brand-gray-100))",
+                        backdropFilter: "blur(8px)",
+                        borderRadius: "0.75rem",
+                        padding: "0.75rem 1rem",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                        fontSize: "0.875rem",
+                        letterSpacing: "0.025em"
                       }}
-                      labelStyle={{ color: "hsl(var(--muted-foreground))" }}
+                      labelStyle={{ 
+                        color: "hsl(var(--brand-gray-400))", 
+                        marginBottom: "0.5rem", 
+                        fontWeight: 600,
+                        fontSize: "0.75rem",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase"
+                      }}
                     />
-                    <Bar dataKey="total_amount" fill="hsl(var(--primary))" />
+                    <Bar 
+                      dataKey="total_amount" 
+                      fill="hsl(var(--brand-teal))"
+                      radius={[4, 4, 0, 0]}
+                      className="transition-all duration-300 cursor-pointer"
+                      onMouseOver={(_data, index) => {
+                        // Add hover effect with scale transform and glow
+                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`) as HTMLElement;
+                        if (bar) {
+                          bar.setAttribute('fill', 'hsl(var(--brand-cyan))');
+                          bar.style.transform = 'scaleY(1.05) translateY(-2px)';
+                          bar.style.transformOrigin = 'bottom';
+                          bar.style.filter = 'drop-shadow(0 0 12px hsl(var(--brand-cyan)/40))';
+                          bar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        }
+                      }}
+                      onMouseOut={(_data, index) => {
+                        // Reset to original state with smooth transition
+                        const bar = document.querySelector(`[dataKey="total_amount"][index="${index}"]`) as HTMLElement;
+                        if (bar) {
+                          bar.setAttribute('fill', 'hsl(var(--brand-teal))');
+                          bar.style.transform = 'scaleY(1) translateY(0)';
+                          bar.style.filter = 'none';
+                          bar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        }
+                      }}
+                    />
                   </BarChart>
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center text-muted-foreground">
-                    {insightLoading ? "Loading data..." : error ? "No data available" : "No trades found"}
+                  <div className="h-full w-full flex flex-col items-center justify-center space-y-2">
+                    {insightLoading ? (
+                      <div className="flex flex-col items-center space-y-4">
+                        <div className="flex space-x-2">
+                          <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce [animation-delay:-0.3s] shadow-lg shadow-brand-cyan/20"></div>
+                          <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce [animation-delay:-0.15s] shadow-lg shadow-brand-cyan/20"></div>
+                          <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce shadow-lg shadow-brand-cyan/20"></div>
+                        </div>
+                        <span className="text-brand-gray-400 animate-pulse transition-opacity duration-500 tracking-wide text-sm font-medium">Loading market data...</span>
+                      </div>
+                    ) : error ? (
+                      <div className="flex items-center justify-center space-x-3 text-red-500/90 bg-red-500/5 px-4 py-3 rounded-lg border border-red-500/10">
+                        <span className="animate-pulse text-lg">⚠</span>
+                        <span className="font-medium">{error}</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <span className="text-brand-gray-300 font-medium tracking-wide">No trades found</span>
+                        <span className="text-brand-gray-400 text-sm tracking-wide">Try adjusting your filter criteria</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </ResponsiveContainer>
@@ -207,57 +305,94 @@ export function CongressTradesPanel() {
         </Card>
 
         {/* Trades Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Ticker</TableHead>
-                <TableHead>Congress Member</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead>Trade Date</TableHead>
-                <TableHead>Disclosure Date</TableHead>
-              </TableRow>
-            </TableHeader>
+        <Card className="p-6 bg-brand-navy/30 border-brand-gray-700/50">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-teal to-brand-cyan bg-clip-text text-transparent">Recent Congress Trades</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-brand-gray-700/50 hover:bg-transparent">
+                  <TableHead className="text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Ticker</TableHead>
+                  <TableHead className="text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Congress Member</TableHead>
+                  <TableHead className="text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Type</TableHead>
+                  <TableHead className="text-right text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Amount</TableHead>
+                  <TableHead className="text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Trade Date</TableHead>
+                  <TableHead className="text-brand-gray-200 font-bold text-sm uppercase tracking-wider transition-colors hover:text-brand-gray-100">Disclosure Date</TableHead>
+                </TableRow>
+              </TableHeader>
             <TableBody>
               {trades.length > 0 ? (
                 trades.map((trade, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{trade.ticker}</TableCell>
-                    <TableCell>{trade.congress_member}</TableCell>
-                    <TableCell>{trade.trade_type}</TableCell>
-                    <TableCell className="text-right">{formatCurrency(trade.amount)}</TableCell>
-                    <TableCell>{trade.trade_date}</TableCell>
-                    <TableCell>{trade.disclosure_date}</TableCell>
+                  <TableRow 
+                    key={index} 
+                    className="border-b border-brand-gray-700/50 transition-all duration-300 hover:bg-brand-navy/40 hover:shadow-lg hover:shadow-brand-cyan/5 group"
+                  >
+                    <TableCell className="font-medium tracking-wide text-brand-gray-100 group-hover:text-brand-cyan transition-colors">{trade.ticker}</TableCell>
+                    <TableCell className="text-brand-gray-200 group-hover:text-brand-gray-100 transition-colors tracking-wide">{trade.congress_member}</TableCell>
+                    <TableCell className="text-brand-gray-200 group-hover:text-brand-gray-100 transition-colors tracking-wide uppercase text-sm">{trade.trade_type}</TableCell>
+                    <TableCell className="text-right text-brand-gray-200 group-hover:text-brand-gray-100 transition-colors font-medium">{formatCurrency(trade.amount)}</TableCell>
+                    <TableCell className="text-brand-gray-200 group-hover:text-brand-gray-100 transition-colors text-sm">{trade.trade_date}</TableCell>
+                    <TableCell className="text-brand-gray-200 group-hover:text-brand-gray-100 transition-colors text-sm">{trade.disclosure_date}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center">
-                    {insightLoading ? (
-                      <span className="text-muted-foreground">Loading trades...</span>
-                    ) : error ? (
-                      <span className="text-destructive">{error}</span>
-                    ) : (
-                      <span className="text-muted-foreground">No trades found</span>
-                    )}
+                  <TableCell colSpan={6} className="h-32 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-3">
+                      {insightLoading ? (
+                        <div className="flex flex-col items-center space-y-4">
+                          <div className="flex space-x-2">
+                            <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce [animation-delay:-0.3s] shadow-lg shadow-brand-cyan/20"></div>
+                            <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce [animation-delay:-0.15s] shadow-lg shadow-brand-cyan/20"></div>
+                            <div className="w-2 h-2 bg-gradient-to-r from-brand-teal to-brand-cyan rounded-full animate-bounce shadow-lg shadow-brand-cyan/20"></div>
+                          </div>
+                          <span className="text-brand-gray-400 animate-pulse transition-opacity duration-500 tracking-wide text-sm font-medium">Loading trades...</span>
+                        </div>
+                      ) : error ? (
+                        <div className="flex items-center justify-center space-x-3 text-red-500/90 bg-red-500/5 px-4 py-3 rounded-lg border border-red-500/10">
+                          <span className="animate-pulse text-lg">⚠</span>
+                          <span className="font-medium tracking-wide text-sm">{error}</span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                          <span className="text-brand-gray-300 font-medium tracking-wide">No trades found</span>
+                          <span className="text-brand-gray-400 text-sm tracking-wide">Try adjusting your filter criteria</span>
+                        </div>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* ChatGPT Insight Box */}
-        <Card className="bg-muted transition-all duration-300 hover:bg-muted/80">
+        <Card className="bg-brand-navy/30 border-brand-gray-700/50 transition-all duration-300 hover:bg-brand-navy/40 hover:shadow-lg hover:shadow-brand-cyan/5">
           <CardContent className="pt-6">
             <div className="flex items-start space-x-4">
               <div className="shrink-0">
-                <MessageSquare className={`h-5 w-5 mt-0.5 transition-colors ${insightLoading ? 'animate-pulse text-muted-foreground/70' : error ? 'text-destructive' : 'text-primary'}`} />
+                <MessageSquare className={`h-5 w-5 mt-0.5 transition-all duration-300 ${
+                  insightLoading 
+                    ? 'animate-pulse text-brand-gray-400' 
+                    : error 
+                    ? 'text-red-500 animate-pulse' 
+                    : 'text-brand-gold hover:text-brand-cyan hover:scale-110'
+                }`} />
               </div>
               <div className="min-h-[2.5rem] flex items-center">
-                <p className={`text-sm leading-relaxed ${error ? 'text-destructive' : ''}`}>
-                  {error || insight || (insightLoading ? "Analyzing trading patterns..." : "No insights available.")}
+                <p className={`text-sm leading-relaxed tracking-wide transition-colors duration-300 ${
+                  error 
+                    ? 'text-red-500 font-medium' 
+                    : 'text-brand-gray-200 group-hover:text-brand-gray-100'
+                }`}>
+                  {error || insight || (insightLoading ? (
+                    <span className="text-brand-gray-400 animate-pulse tracking-wide text-sm font-medium">Analyzing trading patterns...</span>
+                  ) : (
+                    <span className="text-brand-gray-400 tracking-wide text-sm">No insights available</span>
+                  ))}
                 </p>
               </div>
             </div>

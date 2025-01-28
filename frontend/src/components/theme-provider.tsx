@@ -34,6 +34,25 @@ export function ThemeProvider({
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
 
+    // Set brand colors as CSS variables
+    root.style.setProperty('--brand-teal', '#2DD4BF')
+    root.style.setProperty('--brand-cyan', '#0EA5E9')
+    root.style.setProperty('--brand-accent', '#22D3EE')
+    root.style.setProperty('--brand-navy', '#0F172A')
+    root.style.setProperty('--brand-black', '#000000')
+    root.style.setProperty('--brand-white', '#FFFFFF')
+    
+    // Set additional theme variables
+    root.style.setProperty('--brand-gray-100', '#F5F5F5')
+    root.style.setProperty('--brand-gray-200', '#E5E5E5')
+    root.style.setProperty('--brand-gray-300', '#D4D4D4')
+    root.style.setProperty('--brand-gray-400', '#A3A3A3')
+    root.style.setProperty('--brand-gray-500', '#737373')
+    root.style.setProperty('--brand-gray-600', '#525252')
+    root.style.setProperty('--brand-gray-700', '#404040')
+    root.style.setProperty('--brand-gray-800', '#262626')
+    root.style.setProperty('--brand-gray-900', '#171717')
+
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
         .matches
@@ -41,10 +60,50 @@ export function ThemeProvider({
         : "light"
 
       root.classList.add(systemTheme)
+      // Set theme-specific colors
+      if (systemTheme === "dark") {
+        root.style.setProperty('--background', 'var(--brand-black)')
+        root.style.setProperty('--foreground', 'var(--brand-gray-100)')
+        root.style.setProperty('--primary', 'var(--brand-teal)')
+        root.style.setProperty('--muted', 'var(--brand-gray-800)')
+        root.style.setProperty('--muted-foreground', 'var(--brand-gray-400)')
+        root.style.setProperty('--accent', 'var(--brand-cyan)')
+        root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
+      } else {
+        root.style.setProperty('--background', 'var(--brand-white)')
+        root.style.setProperty('--foreground', 'var(--brand-black)')
+        root.style.setProperty('--primary', 'var(--brand-teal)')
+        root.style.setProperty('--muted', 'var(--brand-gray-100)')
+        root.style.setProperty('--muted-foreground', 'var(--brand-gray-600)')
+        root.style.setProperty('--accent', 'var(--brand-cyan)')
+        root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
+      }
       return
     }
 
     root.classList.add(theme)
+    // Set theme-specific colors
+    if (theme === "dark") {
+      root.style.setProperty('--background', 'var(--brand-black)')
+      root.style.setProperty('--foreground', 'var(--brand-gray-100)')
+      root.style.setProperty('--primary', 'var(--brand-teal)')
+      root.style.setProperty('--muted', 'var(--brand-gray-800)')
+      root.style.setProperty('--muted-foreground', 'var(--brand-gray-400)')
+      root.style.setProperty('--accent', 'var(--brand-cyan)')
+      root.style.setProperty('--accent-foreground', 'var(--brand-navy)')
+      root.style.setProperty('--border', 'var(--brand-gray-800)')
+      root.style.setProperty('--input', 'var(--brand-gray-900)')
+    } else {
+      root.style.setProperty('--background', 'var(--brand-white)')
+      root.style.setProperty('--foreground', 'var(--brand-black)')
+      root.style.setProperty('--primary', 'var(--brand-gold)')
+      root.style.setProperty('--muted', 'var(--brand-gray-100)')
+      root.style.setProperty('--muted-foreground', 'var(--brand-gray-600)')
+      root.style.setProperty('--accent', 'var(--brand-gold)')
+      root.style.setProperty('--accent-foreground', 'var(--brand-black)')
+      root.style.setProperty('--border', 'var(--brand-gray-200)')
+      root.style.setProperty('--input', 'var(--brand-white)')
+    }
   }, [theme])
 
   const value = {

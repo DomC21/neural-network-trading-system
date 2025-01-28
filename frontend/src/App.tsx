@@ -12,13 +12,13 @@ import { DevelopmentStatus } from "./components/development-status"
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="lukz-theme">
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="fixed top-4 right-4 z-50">
+      <div className="min-h-screen bg-brand-black text-brand-gray-100 transition-colors duration-300">
+        <div className="fixed top-6 right-6 z-50">
           <ThemeToggle />
         </div>
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-6 py-12 space-y-16">
           <OverviewSection />
-          <div id="demo-panels" className="mt-16 space-y-8">
+          <div id="demo-panels" className="mt-24 space-y-12">
             <CongressTradesPanel />
             <GreekFlowPanel />
             <EarningsPanel />

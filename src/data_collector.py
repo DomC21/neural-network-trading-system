@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime, timedelta
-from .data_fetcher import DataFetcher
+from data_fetcher import DataFetcher
 
 class DataCollector:
     def __init__(self):

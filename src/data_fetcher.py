@@ -1,7 +1,7 @@
 import yfinance as yf
 from polygon import RESTClient
 from alpha_vantage.timeseries import TimeSeries
-from .config import POLYGON_API_KEY, ALPHA_VANTAGE_API_KEY, SYMBOL
+from config import POLYGON_API_KEY, ALPHA_VANTAGE_API_KEY, SYMBOL
 
 class DataFetcher:
     def __init__(self):

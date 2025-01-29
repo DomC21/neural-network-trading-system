@@ -12,6 +12,9 @@ class StockAnalyzer:
         raw_data = self.collector.collect_all_data()
         
         # Use YFinance as primary source due to data quality and consistency
+        if 'yfinance' not in raw_data or raw_data['yfinance'] is None or len(raw_data['yfinance']) == 0:
+            raise ValueError("Failed to fetch YFinance data")
+            
         self.data = raw_data['yfinance']
         
         # Calculate technical indicators
@@ -19,10 +22,15 @@ class StockAnalyzer:
         
     def calculate_indicators(self):
         """Calculate technical indicators for NVDA"""
-        # 20-day Simple Moving Average
-        # Calculate technical indicators using adjusted close prices
-        close_series = self.data['Close'] if 'Close' in self.data.columns else self.data['close']
-        volume_series = self.data['Volume'] if 'Volume' in self.data.columns else self.data['volume']
+        if self.data is None or len(self.data) == 0:
+            raise ValueError("No data available for analysis. Please call prepare_data() first.")
+            
+        # Get price and volume data with column name flexibility
+        try:
+            close_series = self.data['Close'] if 'Close' in self.data.columns else self.data['close']
+            volume_series = self.data['Volume'] if 'Volume' in self.data.columns else self.data['volume']
+        except KeyError as e:
+            raise ValueError(f"Required price data not found in DataFrame: {e}")
         
         # Simple Moving Averages
         self.data['SMA_20'] = close_series.rolling(window=20).mean()
@@ -40,6 +48,7 @@ class StockAnalyzer:
         exp2 = close_series.ewm(span=26, adjust=False).mean()
         self.data['MACD'] = exp1 - exp2
         self.data['Signal_Line'] = self.data['MACD'].ewm(span=9, adjust=False).mean()
+        self.data['MACD_Histogram'] = self.data['MACD'] - self.data['Signal_Line']
         
         # Bollinger Bands (20-day, 2 standard deviations)
         self.data['BB_middle'] = close_series.rolling(window=20).mean()

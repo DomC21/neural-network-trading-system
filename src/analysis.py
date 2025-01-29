@@ -20,32 +20,35 @@ class StockAnalyzer:
     def calculate_indicators(self):
         """Calculate technical indicators for NVDA"""
         # 20-day Simple Moving Average
-        self.data['SMA_20'] = self.data['Close'].rolling(window=20).mean()
+        # Calculate technical indicators using adjusted close prices
+        close_series = self.data['Close'] if 'Close' in self.data.columns else self.data['close']
+        volume_series = self.data['Volume'] if 'Volume' in self.data.columns else self.data['volume']
         
-        # 50-day Simple Moving Average
-        self.data['SMA_50'] = self.data['Close'].rolling(window=50).mean()
+        # Simple Moving Averages
+        self.data['SMA_20'] = close_series.rolling(window=20).mean()
+        self.data['SMA_50'] = close_series.rolling(window=50).mean()
         
         # Relative Strength Index (14-day)
-        delta = self.data['Close'].diff()
+        delta = close_series.diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
         rs = gain / loss
         self.data['RSI'] = 100 - (100 / (1 + rs))
         
         # MACD (12,26,9)
-        exp1 = self.data['Close'].ewm(span=12, adjust=False).mean()
-        exp2 = self.data['Close'].ewm(span=26, adjust=False).mean()
+        exp1 = close_series.ewm(span=12, adjust=False).mean()
+        exp2 = close_series.ewm(span=26, adjust=False).mean()
         self.data['MACD'] = exp1 - exp2
         self.data['Signal_Line'] = self.data['MACD'].ewm(span=9, adjust=False).mean()
         
         # Bollinger Bands (20-day, 2 standard deviations)
-        self.data['BB_middle'] = self.data['Close'].rolling(window=20).mean()
-        std = self.data['Close'].rolling(window=20).std()
+        self.data['BB_middle'] = close_series.rolling(window=20).mean()
+        std = close_series.rolling(window=20).std()
         self.data['BB_upper'] = self.data['BB_middle'] + (std * 2)
         self.data['BB_lower'] = self.data['BB_middle'] - (std * 2)
         
         # Volume Analysis
-        self.data['Volume_SMA_20'] = self.data['Volume'].rolling(window=20).mean()
+        self.data['Volume_SMA_20'] = volume_series.rolling(window=20).mean()
         
     def get_current_signals(self):
         """Generate trading signals based on technical indicators"""

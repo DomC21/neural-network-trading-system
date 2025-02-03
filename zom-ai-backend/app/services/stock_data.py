@@ -200,15 +200,27 @@ class StockDataService:
                         # Calculate Bollinger Bands (20-day)
                         print("Calculating Bollinger Bands")
                         if len(closes) >= 20:
-                            period_closes = closes[:20]
+                            period_closes = closes[:20]  # Get most recent 20 closes
+                            print(f"Using {len(period_closes)} most recent closing prices for Bollinger Bands")
+                            print(f"First few closes: {period_closes[:5]}")
+                            
                             sma_20 = sum(period_closes) / 20
                             std_dev = (sum((x - sma_20) ** 2 for x in period_closes) / 20) ** 0.5
-                            indicators["bollinger_upper"] = str(round(sma_20 + (2 * std_dev), 2))
-                            indicators["bollinger_middle"] = str(round(sma_20, 2))
-                            indicators["bollinger_lower"] = str(round(sma_20 - (2 * std_dev), 2))
+                            
+                            upper_band = sma_20 + (2 * std_dev)
+                            middle_band = sma_20
+                            lower_band = sma_20 - (2 * std_dev)
+                            
+                            indicators["bollinger_upper"] = str(round(upper_band, 2))
+                            indicators["bollinger_middle"] = str(round(middle_band, 2))
+                            indicators["bollinger_lower"] = str(round(lower_band, 2))
+                            
+                            print(f"Bollinger Bands calculated: Upper={upper_band:.2f}, Middle={middle_band:.2f}, Lower={lower_band:.2f}")
                         else:
+                            print(f"Insufficient data points for 20-day Bollinger Bands (only {len(closes)} available)")
                             sma = sum(closes) / len(closes)
                             std_dev = (sum((x - sma) ** 2 for x in closes) / len(closes)) ** 0.5
+                            
                             indicators["bollinger_upper"] = str(round(sma + (2 * std_dev), 2))
                             indicators["bollinger_middle"] = str(round(sma, 2))
                             indicators["bollinger_lower"] = str(round(sma - (2 * std_dev), 2))
@@ -340,6 +352,7 @@ class StockDataService:
             if not self.session:
                 self.session = aiohttp.ClientSession()
                 
+            polygon_beta = None
             # Get company details from Polygon.io
             if self.polygon_key:
                 details_url = f"https://api.polygon.io/v3/reference/tickers/{symbol}"
@@ -353,8 +366,9 @@ class StockDataService:
                             results = data.get("results", {})
                             if results.get("market_cap"):
                                 fundamental_data["MarketCapitalization"] = str(results["market_cap"])
-                            if results.get("beta"):
-                                fundamental_data["Beta"] = str(results["beta"])
+                            polygon_beta = results.get("beta")
+                            if polygon_beta is not None:
+                                fundamental_data["Beta"] = str(polygon_beta)
                         else:
                             error_text = await response.text()
                             print(f"Company details API error: {error_text}")
@@ -363,8 +377,9 @@ class StockDataService:
             else:
                 print("Polygon API key not configured")
             
-            # Get financial ratios from Alpha Vantage
+            # Get financial ratios and balance sheet data from Alpha Vantage
             if self.alpha_vantage_key:
+                # First try OVERVIEW endpoint
                 overview_params = {
                     "function": "OVERVIEW",
                     "symbol": symbol,
@@ -386,6 +401,34 @@ class StockDataService:
                             for key, value in ratios.items():
                                 if value and value != "None":
                                     fundamental_data[key] = str(value)
+                            
+                            # Always try to get Beta from Alpha Vantage first as it's more reliable
+                            alpha_beta = data.get("Beta")
+                            if alpha_beta and alpha_beta != "None":
+                                fundamental_data["Beta"] = str(alpha_beta)
+                                print(f"Using Alpha Vantage Beta: {alpha_beta}")
+                            elif polygon_beta is not None:
+                                fundamental_data["Beta"] = str(polygon_beta)
+                            
+                            # Always calculate Debt/Equity ratio from balance sheet data
+                            balance_sheet_params = {
+                                "function": "BALANCE_SHEET",
+                                "symbol": symbol,
+                                "apikey": self.alpha_vantage_key
+                            }
+                            
+                            async with self.session.get(self.alpha_vantage_url, params=balance_sheet_params, timeout=self.timeout) as bs_response:
+                                if bs_response.status == 200:
+                                    bs_data = await bs_response.json()
+                                    if "annualReports" in bs_data and bs_data["annualReports"]:
+                                        latest_report = bs_data["annualReports"][0]
+                                        total_liabilities = float(latest_report.get("totalLiabilities", 0))
+                                        total_equity = float(latest_report.get("totalShareholderEquity", 0))
+                                        
+                                        if total_equity != 0:
+                                            debt_equity = total_liabilities / total_equity
+                                            fundamental_data["DebtToEquityRatio"] = str(round(debt_equity, 2))
+                                            print(f"Calculated Debt/Equity ratio: {debt_equity}")
                         else:
                             error_text = await response.text()
                             print(f"Financial ratios API error: {error_text}")

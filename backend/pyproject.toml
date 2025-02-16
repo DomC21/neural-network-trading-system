@@ -12,6 +12,11 @@ fastapi = {extras = ["standard"], version = "^0.115.7"}
 psycopg = {extras = ["binary"], version = "^3.2.4"}
 httpx = "^0.28.1"
 python-dotenv = "^1.0.1"
+yfinance = "^0.2.53"
+pandas = "^2.2.3"
+polygon-api-client = "^1.14.3"
+fredapi = "^0.5.2"
+pandas-ta = "^0.3.14b0"
 
 
 [build-system]

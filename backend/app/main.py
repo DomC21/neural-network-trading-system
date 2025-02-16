@@ -1,6 +1,11 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from typing import Optional, List, Dict
+import io
+import csv
+import json
+from datetime import datetime
 from app.services.unusual_whales import get_congress_trades
 from app.services.greek_flow import get_greek_flow, get_greek_descriptions
 from app.services.market_tide import get_market_tide
@@ -14,6 +19,7 @@ from app.services.insights import (
     generate_insider_trading_insight,
     generate_premium_flow_insight
 )
+from app.services.stock_analysis import analyze_stock
 
 app = FastAPI()
 
@@ -133,3 +139,62 @@ async def market_tide_data(
 async def sector_descriptions() -> Dict[str, str]:
     """Get descriptions of sectors for tooltips"""
     return get_sector_descriptions()
+
+@app.get("/api/stock/analysis/{ticker}")
+async def stock_analysis(
+    ticker: str,
+    period: Optional[str] = Query("6mo", description="Analysis period (1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max)"),
+    export_format: Optional[str] = Query(None, description="Export format (csv or json)")
+):
+    """Get comprehensive stock analysis including technical, fundamental, and AI insights"""
+    try:
+        data = await analyze_stock(ticker, period)
+        
+        if export_format:
+            if export_format.lower() == 'csv':
+                output = io.StringIO()
+                writer = csv.writer(output)
+                
+                # Write headers and data for technical analysis
+                writer.writerow(['Technical Analysis'])
+                for key, value in data['technical_analysis'].items():
+                    if key != 'historical_data':
+                        writer.writerow([key, value])
+                        
+                # Write headers and data for fundamental analysis
+                writer.writerow([])  # Empty row for separation
+                writer.writerow(['Fundamental Analysis'])
+                for key, value in data['fundamental_analysis'].items():
+                    writer.writerow([key, value])
+                    
+                # Write AI insight
+                writer.writerow([])
+                writer.writerow(['AI Insight'])
+                writer.writerow([data['ai_insight']])
+                
+                output.seek(0)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                return StreamingResponse(
+                    io.StringIO(output.getvalue()),
+                    media_type="text/csv",
+                    headers={
+                        "Content-Disposition": f"attachment; filename={ticker}_analysis_{timestamp}.csv"
+                    }
+                )
+            elif export_format.lower() == 'json':
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                return StreamingResponse(
+                    io.StringIO(json.dumps(data, indent=2)),
+                    media_type="application/json",
+                    headers={
+                        "Content-Disposition": f"attachment; filename={ticker}_analysis_{timestamp}.json"
+                    }
+                )
+            else:
+                raise HTTPException(status_code=400, detail="Invalid export format. Use 'csv' or 'json'")
+        
+        return data
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

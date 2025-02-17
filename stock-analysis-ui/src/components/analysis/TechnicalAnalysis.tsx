@@ -1,5 +1,7 @@
 import { Card } from "../ui/card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../ui/tooltip"
+import { technicalMetrics } from "@/lib/metrics"
 
 interface TechnicalAnalysisProps {
   data: {
@@ -21,24 +23,55 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
   return (
     <Card className="p-6 bg-zinc-900 border-gold">
       <h2 className="text-xl font-semibold text-gold mb-4">Technical Analysis</h2>
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <p className="text-gray-400">Current Price</p>
-          <p className="text-2xl font-bold text-white">${data.price.toFixed(2)}</p>
+      <TooltipProvider>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <p className="text-gray-400">Current Price</p>
+            <p className="text-2xl font-bold text-white">${data.price.toFixed(2)}</p>
+          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-help">
+                <p className="text-gray-400">Volume</p>
+                <p className="text-2xl font-bold text-white">{data.volume.toLocaleString()}</p>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+              <h3 className="font-semibold text-gold">{technicalMetrics.volume.name}</h3>
+              <p className="text-sm text-white">{technicalMetrics.volume.description}</p>
+              <p className="text-sm text-gray-400 mt-1">{technicalMetrics.volume.getContext(data.volume)}</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-help">
+                <p className="text-gray-400">RSI (14)</p>
+                <p className={`text-xl font-bold ${technicalMetrics.rsi.getColor?.(data.rsi) ?? 'text-white'}`}>
+                  {data.rsi.toFixed(2)}
+                </p>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+              <h3 className="font-semibold text-gold">{technicalMetrics.rsi.name}</h3>
+              <p className="text-sm text-white">{technicalMetrics.rsi.description}</p>
+              <p className="text-sm text-gray-400 mt-1">{technicalMetrics.rsi.getContext(data.rsi)}</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-help">
+                <p className="text-gray-400">MACD</p>
+                <p className="text-xl font-bold text-white">{data.macd.toFixed(2)}</p>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+              <h3 className="font-semibold text-gold">{technicalMetrics.macd.name}</h3>
+              <p className="text-sm text-white">{technicalMetrics.macd.description}</p>
+              <p className="text-sm text-gray-400 mt-1">{technicalMetrics.macd.getContext(data.macd)}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
-        <div>
-          <p className="text-gray-400">Volume</p>
-          <p className="text-2xl font-bold text-white">{data.volume.toLocaleString()}</p>
-        </div>
-        <div>
-          <p className="text-gray-400">RSI (14)</p>
-          <p className="text-xl font-bold text-white">{data.rsi.toFixed(2)}</p>
-        </div>
-        <div>
-          <p className="text-gray-400">MACD</p>
-          <p className="text-xl font-bold text-white">{data.macd.toFixed(2)}</p>
-        </div>
-      </div>
+      </TooltipProvider>
       
       <div className="h-64 mt-4">
         <ResponsiveContainer width="100%" height="100%">
@@ -46,7 +79,7 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
             <CartesianGrid strokeDasharray="3 3" stroke="#333" />
             <XAxis dataKey="date" stroke="#666" />
             <YAxis stroke="#666" />
-            <Tooltip 
+            <RechartsTooltip 
               contentStyle={{ backgroundColor: '#000', border: '1px solid #FFD700' }}
               labelStyle={{ color: '#FFD700' }}
             />
@@ -67,14 +100,32 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
       </div>
       
       <div className="grid grid-cols-2 gap-4 mt-6">
-        <div>
-          <p className="text-gray-400">Support Level</p>
-          <p className="text-xl font-bold text-white">${data.support.toFixed(2)}</p>
-        </div>
-        <div>
-          <p className="text-gray-400">Resistance Level</p>
-          <p className="text-xl font-bold text-white">${data.resistance.toFixed(2)}</p>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="cursor-help">
+              <p className="text-gray-400">Support Level</p>
+              <p className="text-xl font-bold text-white">${data.support.toFixed(2)}</p>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+            <h3 className="font-semibold text-gold">{technicalMetrics.support.name}</h3>
+            <p className="text-sm text-white">{technicalMetrics.support.description}</p>
+            <p className="text-sm text-gray-400 mt-1">{technicalMetrics.support.getContext(data.support)}</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="cursor-help">
+              <p className="text-gray-400">Resistance Level</p>
+              <p className="text-xl font-bold text-white">${data.resistance.toFixed(2)}</p>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+            <h3 className="font-semibold text-gold">{technicalMetrics.resistance.name}</h3>
+            <p className="text-sm text-white">{technicalMetrics.resistance.description}</p>
+            <p className="text-sm text-gray-400 mt-1">{technicalMetrics.resistance.getContext(data.resistance)}</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </Card>
   )

@@ -2,11 +2,13 @@ from typing import Dict, List, Optional
 import random
 from .chatgpt import (
     generate_insight,
+    generate_deep_research_prompt,
     CONGRESS_TRADES_PROMPT,
     GREEK_FLOW_PROMPT,
     EARNINGS_PROMPT,
     INSIDER_TRADING_PROMPT,
-    PREMIUM_FLOW_PROMPT
+    PREMIUM_FLOW_PROMPT,
+    MARKET_TIDE_PROMPT
 )
 
 def generate_congress_trades_insight(trades: List[Dict]) -> str:

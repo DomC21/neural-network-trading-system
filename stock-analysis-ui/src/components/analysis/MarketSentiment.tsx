@@ -1,6 +1,7 @@
 
 import { Card } from "../ui/card";
 import { FC } from "react";
+import { cn } from "@/lib/utils";
 
 interface MarketSentimentProps {
   data: {
@@ -31,8 +32,8 @@ export const MarketSentiment: FC<MarketSentimentProps> = ({ data }) => {
   };
 
   return (
-    <Card className="p-6 bg-zinc-900 border-gold">
-      <h2 className="text-xl font-semibold text-gold mb-4">
+    <Card className={cn("p-6 bg-zinc-900", "border-gold")}>
+      <h2 className={cn("text-xl font-semibold mb-4", "text-gold")}>
         Market Sentiment & Macroeconomic Analysis
       </h2>
       <div className="prose prose-invert max-w-none space-y-6">

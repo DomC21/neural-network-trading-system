@@ -1,6 +1,7 @@
 import { Card } from "../ui/card"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../ui/tooltip"
 import { fundamentalMetrics } from "@/lib/metrics"
+import { cn } from "@/lib/utils"
 
 interface FundamentalAnalysisProps {
   data: {
@@ -23,8 +24,8 @@ interface FundamentalAnalysisProps {
 
 export function FundamentalAnalysis({ data }: FundamentalAnalysisProps) {
   return (
-    <Card className="p-6 bg-zinc-900 border-gold">
-      <h2 className="text-xl font-semibold text-gold mb-4">Fundamental Analysis</h2>
+    <Card className={cn("p-6 bg-zinc-900", "border-gold")}>
+      <h2 className={cn("text-xl font-semibold mb-4", "text-gold")}>Fundamental Analysis</h2>
       
       <TooltipProvider>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -43,8 +44,8 @@ export function FundamentalAnalysis({ data }: FundamentalAnalysisProps) {
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-              <h3 className="font-semibold text-gold">{fundamentalMetrics.market_cap.name}</h3>
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+              <h3 className={cn("font-semibold", "text-gold")}>{fundamentalMetrics.market_cap.name}</h3>
               <p className="text-sm text-white">{fundamentalMetrics.market_cap.description}</p>
               <p className="text-sm text-gray-400 mt-1">{fundamentalMetrics.market_cap.getContext(data.market_cap)}</p>
             </TooltipContent>
@@ -65,8 +66,8 @@ export function FundamentalAnalysis({ data }: FundamentalAnalysisProps) {
                 <p className="text-sm text-gray-400">Forward: {data.forward_pe.toFixed(2)}</p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-              <h3 className="font-semibold text-gold">{fundamentalMetrics.pe_ratio.name}</h3>
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+              <h3 className={cn("font-semibold", "text-gold")}>{fundamentalMetrics.pe_ratio.name}</h3>
               <p className="text-sm text-white">{fundamentalMetrics.pe_ratio.description}</p>
               <p className="text-sm text-gray-400 mt-1">{fundamentalMetrics.pe_ratio.getContext(data.pe_ratio)}</p>
             </TooltipContent>
@@ -84,15 +85,15 @@ export function FundamentalAnalysis({ data }: FundamentalAnalysisProps) {
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
               <div className="space-y-2">
                 <div>
-                  <h3 className="font-semibold text-gold">{fundamentalMetrics.revenue_growth.name}</h3>
+                  <h3 className={cn("font-semibold", "text-gold")}>{fundamentalMetrics.revenue_growth.name}</h3>
                   <p className="text-sm text-white">{fundamentalMetrics.revenue_growth.description}</p>
                   <p className="text-sm text-gray-400">{fundamentalMetrics.revenue_growth.getContext(data.revenue_growth)}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gold">{fundamentalMetrics.earnings_growth.name}</h3>
+                  <h3 className={cn("font-semibold", "text-gold")}>{fundamentalMetrics.earnings_growth.name}</h3>
                   <p className="text-sm text-white">{fundamentalMetrics.earnings_growth.description}</p>
                   <p className="text-sm text-gray-400">{fundamentalMetrics.earnings_growth.getContext(data.earnings_growth)}</p>
                 </div>

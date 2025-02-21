@@ -2,6 +2,7 @@ import { Card } from "../ui/card"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../ui/tooltip"
 import { technicalMetrics } from "@/lib/metrics"
+import { cn } from "@/lib/utils"
 
 interface TechnicalAnalysisProps {
   data: {
@@ -21,8 +22,8 @@ interface TechnicalAnalysisProps {
 
 export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
   return (
-    <Card className="p-6 bg-zinc-900 border-gold">
-      <h2 className="text-xl font-semibold text-gold mb-4">Technical Analysis</h2>
+    <Card className={cn("p-6 bg-zinc-900", "border-gold")}>
+      <h2 className={cn("text-xl font-semibold mb-4", "text-gold")}>Technical Analysis</h2>
       <TooltipProvider>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
@@ -36,8 +37,8 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
                 <p className="text-2xl font-bold text-white">{data.volume.toLocaleString()}</p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-              <h3 className="font-semibold text-gold">{technicalMetrics.volume.name}</h3>
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+              <h3 className={cn("font-semibold", "text-gold")}>{technicalMetrics.volume.name}</h3>
               <p className="text-sm text-white">{technicalMetrics.volume.description}</p>
               <p className="text-sm text-gray-400 mt-1">{technicalMetrics.volume.getContext(data.volume)}</p>
             </TooltipContent>
@@ -51,8 +52,8 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-              <h3 className="font-semibold text-gold">{technicalMetrics.rsi.name}</h3>
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+              <h3 className={cn("font-semibold", "text-gold")}>{technicalMetrics.rsi.name}</h3>
               <p className="text-sm text-white">{technicalMetrics.rsi.description}</p>
               <p className="text-sm text-gray-400 mt-1">{technicalMetrics.rsi.getContext(data.rsi)}</p>
             </TooltipContent>
@@ -64,8 +65,8 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
                 <p className="text-xl font-bold text-white">{data.macd.toFixed(2)}</p>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-              <h3 className="font-semibold text-gold">{technicalMetrics.macd.name}</h3>
+            <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+              <h3 className={cn("font-semibold", "text-gold")}>{technicalMetrics.macd.name}</h3>
               <p className="text-sm text-white">{technicalMetrics.macd.description}</p>
               <p className="text-sm text-gray-400 mt-1">{technicalMetrics.macd.getContext(data.macd)}</p>
             </TooltipContent>
@@ -107,8 +108,8 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
               <p className="text-xl font-bold text-white">${data.support.toFixed(2)}</p>
             </div>
           </TooltipTrigger>
-          <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-            <h3 className="font-semibold text-gold">{technicalMetrics.support.name}</h3>
+          <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+            <h3 className={cn("font-semibold", "text-gold")}>{technicalMetrics.support.name}</h3>
             <p className="text-sm text-white">{technicalMetrics.support.description}</p>
             <p className="text-sm text-gray-400 mt-1">{technicalMetrics.support.getContext(data.support)}</p>
           </TooltipContent>
@@ -120,8 +121,8 @@ export function TechnicalAnalysis({ data }: TechnicalAnalysisProps) {
               <p className="text-xl font-bold text-white">${data.resistance.toFixed(2)}</p>
             </div>
           </TooltipTrigger>
-          <TooltipContent className="max-w-sm bg-zinc-900 border-gold">
-            <h3 className="font-semibold text-gold">{technicalMetrics.resistance.name}</h3>
+          <TooltipContent className={cn("max-w-sm bg-zinc-900", "border-gold")}>
+            <h3 className={cn("font-semibold", "text-gold")}>{technicalMetrics.resistance.name}</h3>
             <p className="text-sm text-white">{technicalMetrics.resistance.description}</p>
             <p className="text-sm text-gray-400 mt-1">{technicalMetrics.resistance.getContext(data.resistance)}</p>
           </TooltipContent>
